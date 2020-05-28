@@ -1,6 +1,5 @@
 import serial
 import time
-import image
 import numpy as np
 from PIL import Image
 import json
