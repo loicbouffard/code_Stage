@@ -7,14 +7,15 @@ from PIL import Image
 
 
 def init_port():
-    sp = serial.Serial('COM5', 115200)
-    sp.timeout = 1
+    sp = serial.Serial('COM5', 1000000)
+    sp.timeout = 0.3
     return sp
 
 
 def ecrit_image(sp):
     time.sleep(1)
     size = int(sp.readline().decode('utf-8'))
+
     img = sp.read(size)
 
     with open("img_ARDUCAM.jpg", "wb") as f:
@@ -29,7 +30,7 @@ if __name__ == "__main__":
     while(action != 'exit'):
         if action == 'capture':
             ecrit_image(sp)
-        time.sleep(3)
+        time.sleep(2.5)
         while(sp.in_waiting > 0):
             print(sp.readline())
         sp.reset_input_buffer()
@@ -40,6 +41,7 @@ if __name__ == "__main__":
                 sp.timeout = liste_actions.dic_dim[action]
             sp.write(commande)
         elif action == "test image":
+            sp.timeout = 0.4
             nbr = 100
             liste_pixels = actions_image.cree_liste_pixel(nbr)
             for i in range(nbr):
