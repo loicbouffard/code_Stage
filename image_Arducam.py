@@ -13,12 +13,13 @@ def init_port():
 
 
 def ecrit_image(sp):
-    time.sleep(1)  # 1 -> 320x240;
-    size = sp.readline().decode('utf-8')
-    size = int(size)
+    time.sleep(1)
+    size = int(sp.readline().decode('utf-8'))
     img = sp.read(size)
+
     with open("img_ARDUCAM.jpg", "wb") as f:
         f.write(img)
+    sp.reset_input_buffer()
     return Image.open('img_ARDUCAM.jpg')
 
 
@@ -28,14 +29,15 @@ if __name__ == "__main__":
     while(action != 'exit'):
         if action == 'capture':
             ecrit_image(sp)
-            sp.flush()
         time.sleep(3)
         while(sp.in_waiting > 0):
             print(sp.readline())
-        sp.flush()
+        sp.reset_input_buffer()
         action = input('action: ')
         if (action in liste_actions.dic_actions):
             commande = liste_actions.dic_actions[action]
+            if (action in liste_actions.dic_dim):
+                sp.timeout = liste_actions.dic_dim[action]
             sp.write(commande)
         elif action == "test image":
             nbr = 100
@@ -43,7 +45,6 @@ if __name__ == "__main__":
             for i in range(nbr):
                 sp.write(liste_actions.dic_actions["capture"])
                 image = ecrit_image(sp)
-                sp.flush()
                 actions_image.remplir_listes_pixels(i, liste_pixels, image, (153, 29),
                                                     (76, 135), (150, 206), (253, 136))
                 print(i)
