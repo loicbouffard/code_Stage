@@ -24,12 +24,24 @@ def ecrit_image(sp):
     return Image.open('img_ARDUCAM.jpg')
 
 
+def ecrit_image_RAW(sp):
+    time.sleep(1)
+    size = 640*480
+    img = sp.read(size)
+    # print(img)
+    with open("img_ARDUCAM.raw", "wb") as f:
+        f.write(img)
+    sp.reset_input_buffer()
+
+
 if __name__ == "__main__":
     sp = init_port()
     action = ""
     while(action != 'exit'):
         if action == 'capture':
             ecrit_image(sp)
+        elif action == 'captureRAW':
+            ecrit_image_RAW(sp)
         time.sleep(2.5)
         while(sp.in_waiting > 0):
             print(sp.readline())
@@ -40,6 +52,8 @@ if __name__ == "__main__":
             if (action in liste_actions.dic_dim):
                 sp.timeout = liste_actions.dic_dim[action]
             sp.write(commande)
+        if action == "RAW":
+            sp.timeout = 10
         elif action == "test image":
             sp.timeout = 0.4
             nbr = 100
