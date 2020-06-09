@@ -67,3 +67,34 @@ def affiche_liste_RGB(liste_RGB, nbr_pixel):
             else:
                 print('pB'+str(i+1))
             print(liste_RGB[i][j])
+
+
+def moyenne_colonne(matR, matG, matB):
+    '''Permet d'obtenir la moyenne des valeurs RGB pour chaque colonne'''
+    width = len(matR[0])
+    height = len(matR)
+    list_moyenne = ([0]*width, [0]*width, [0]*width)
+    sommeR = 0
+    sommeG = 0
+    sommeB = 0
+    for j in range(width):
+        for i in range(height):
+            sommeR += matR[i, j]
+            sommeG += matG[i, j]
+            sommeB += matB[i, j]
+        list_moyenne[0][j] = sommeR/height
+        list_moyenne[1][j] = sommeG/height
+        list_moyenne[1][j] = sommeB/height
+    return list_moyenne
+
+
+def ligne_horizontale(matR, matG, matB, num_ligne):
+    '''Permet d'obtenir les valeurs RGB d'une ligne '''
+    width = len(matR[0])
+    num_ligne -= 1
+    ligne = ([0]*width, [0]*width, [0]*width)
+    for j in range(width):
+        ligne[0][j] = matR[num_ligne, j]
+        ligne[1][j] = matG[num_ligne, j]
+        ligne[2][j] = matB[num_ligne, j]
+    return ligne
