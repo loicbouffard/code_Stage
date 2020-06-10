@@ -34,21 +34,27 @@ def ecrit_image_RAW(sp):
 
 
 nbr_image = 10  # nombre de captures à prendre
-nbr_pixel = 6   # nombre de pixels à comptabiliser les valeurs RGB
 liste_pixels = [(153, 29), (76, 135), (150, 206),
                 (253, 136), (100, 100), (132, 45)]
+# nombre de pixels à comptabiliser les valeurs RGB
+nbr_pixel = len(liste_pixels)
+
+
 if __name__ == "__main__":
     sp = init_port()
     action = ""
+    image = 0
     while(action != 'exit'):
         if action == 'capture':
-            ecrit_image(sp)
+            image = ecrit_image(sp)
         elif action == 'captureRAW':
             ecrit_image_RAW(sp)
+
         time.sleep(2.5)
         while(sp.in_waiting > 0):
             print(sp.readline())
         sp.reset_input_buffer()
+
         action = input('action: ')
         if (action in liste_actions.dic_actions):
             commande = liste_actions.dic_actions[action]
@@ -66,5 +72,19 @@ if __name__ == "__main__":
                 actions_image.remplir_listes_RGB(
                     i, liste_RGB, image, liste_pixels)
                 print(i)
-            actions_image.affiche_liste_RGB(liste_RGB, nbr_pixel)
+            actions_image.enregistrer_liste_RGB(
+                'liste_RGB_test_image', liste_RGB, nbr_pixel)
+            actions_image.plot_3D(liste_RGB, nbr_pixel, nbr_image)
+            actions_image.plot_3D(liste_RGB, nbr_pixel, nbr_image, 'G')
+            actions_image.plot_3D(liste_RGB, nbr_pixel, nbr_image, 'B')
+            # actions_image.affiche_liste_RGB(liste_RGB, nbr_pixel)
+        elif action == "enregistrer" and image != 0:
+            liste_RGB = actions_image.cree_liste_RGB(1, nbr_pixel)
+            actions_image.remplir_listes_RGB(0, liste_RGB, image, liste_pixels)
+            actions_image.enregistrer_liste_RGB(
+                'liste_RGB_capture', liste_RGB, nbr_pixel)
+        elif action == "3D" and image != 0:
+            liste_RGB = actions_image.cree_liste_RGB(1, nbr_pixel)
+            actions_image.remplir_listes_RGB(0, liste_RGB, image, liste_pixels)
+            actions_image.plot_3D(liste_RGB, nbr_pixel, 1)
     sp.close()
