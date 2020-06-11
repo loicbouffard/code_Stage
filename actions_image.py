@@ -5,6 +5,7 @@ from mpl_toolkits import mplot3d
 
 
 def get_matriceR(image):
+    '''Permet d'obtenir la matrice de pixels Rouge de l'image'''
     matR = np.zeros((image.height, image.width), dtype=np.uint8)
     for i in range(image.height):
         for j in range(image.width):
@@ -13,6 +14,7 @@ def get_matriceR(image):
 
 
 def get_matriceG(image):
+    '''Permet d'obtenir la matrice de pixels Verte de l'image'''
     matG = np.zeros((image.height, image.width), dtype=np.uint8)
     for i in range(image.height):
         for j in range(image.width):
@@ -21,6 +23,7 @@ def get_matriceG(image):
 
 
 def get_matriceB(image):
+    '''Permet d'obtenir la matrice de pixels Bleue de l'image'''
     matB = np.zeros((image.height, image.width), dtype=np.uint8)
     for i in range(image.height):
         for j in range(image.width):
@@ -28,22 +31,30 @@ def get_matriceB(image):
     return matB
 
 
-def affiche_image(image, pixelsR, pixelsG, pixelsB):
-    array = np.zeros([image.height, image.width, 3], dtype=np.uint8)
-    for i in range(image.height):
-        for j in range(image.width):
+def affiche_image(pixelsR, pixelsG, pixelsB):
+    '''Permet de reconstruire et d'afficher une image à partir des matrices de couleurs Rouge, Verte, Bleue'''
+    height = len(pixelsR)
+    width = len(pixelsR[0])
+    array = np.zeros([height, width, 3], dtype=np.uint8)
+    for i in range(height):
+        for j in range(width):
             array[i, j] = (pixelsR[i, j], pixelsG
                            [i, j], pixelsB[i, j])
     img = Image.fromarray(array)
     img.show()
 
 
-def affiche_matrice(image, matrice):
-    for i in range(image.height):
+def affiche_matrice(matrice):
+    '''Permet d'afficher les valeurs d'une matrice selon une perspective horizontale'''
+    for i in range(len(matrice)):
         print(matrice[i])
 
 
 def cree_liste_RGB(nbr_image, nbr_pixel):
+    '''Crée une liste de tuples qui contient des listes
+    le nombre de tuples correspond au nombre de pixels analysés, les tuples sont des
+    triplets qui correspond au trois couleurs RGB du pixel, les listes contenues dans
+    les triplets correspondes au nombre d'images capturées (soit la valeur de l'intensité du pixel (R/G/B) de la n capture) '''
     liste_RGB = []
     for i in range(nbr_pixel):
         liste_RGB.append(([0]*nbr_image, [0]*nbr_image, [0]*nbr_image))
@@ -51,6 +62,7 @@ def cree_liste_RGB(nbr_image, nbr_pixel):
 
 
 def remplir_listes_RGB(iter, arg_liste_RGB, image, arg_liste_pixels):
+    '''Permet de remplir une liste RGB à partir d'une image et d'une liste de pixels choisit'''
     for i in range(len(arg_liste_pixels)):
         p = image.getpixel(arg_liste_pixels[i])
         arg_liste_RGB[i][0][iter] = p[0]  # pRi
@@ -59,6 +71,7 @@ def remplir_listes_RGB(iter, arg_liste_RGB, image, arg_liste_pixels):
 
 
 def affiche_liste_RGB(liste_RGB, nbr_pixel):
+    '''Permet d'afficher à la console une liste RGB'''
     for i in range(nbr_pixel):
         for j in range(3):
             if j == 0:
@@ -85,12 +98,12 @@ def moyenne_colonne(matR, matG, matB):
             sommeB += matB[i, j]
         list_moyenne[0][j] = sommeR/height
         list_moyenne[1][j] = sommeG/height
-        list_moyenne[1][j] = sommeB/height
+        list_moyenne[2][j] = sommeB/height
     return list_moyenne
 
 
 def ligne_horizontale(matR, matG, matB, num_ligne):
-    '''Permet d'obtenir les valeurs RGB d'une ligne '''
+    '''Permet d'obtenir les valeurs RGB d'une ligne horizontale'''
     width = len(matR[0])
     num_ligne -= 1
     ligne = ([0]*width, [0]*width, [0]*width)
@@ -102,19 +115,29 @@ def ligne_horizontale(matR, matG, matB, num_ligne):
 
 
 def enregistrer_liste_RGB(nom_fichier, liste_RGB, nbr_pixel=1):
+    '''Permet d'enregistrer une liste RGB dans un fichier texte qui prend la forme suivante:
+    i correspond au numéro du pixel et la liste est valeur R/G/B du pixel pour le nombre de captures prises
+    pRi
+    [...]
+    pGi
+    [...]
+    pBi
+    [...]'''
     with open(nom_fichier + '.txt', "w") as f:
         for i in range(nbr_pixel):
             for j in range(3):
                 if j == 0:
-                    print('pR'+str(i+1), file=f)
+                    print('pR'+str(i), file=f)
                 elif j == 1:
-                    print('pG'+str(i+1), file=f)
+                    print('pG'+str(i), file=f)
                 else:
-                    print('pB'+str(i+1), file=f)
+                    print('pB'+str(i), file=f)
                 print(liste_RGB[i][j], file=f)
 
 
 def z_functionR(x, y, z, liste_RGB):
+    '''Permet de générer les valeurs des coordonées Z pour un affichage 3D (pixels Rouge)
+    Utilisée seulement par la fonction plot_3D'''
     for i in y:
         for j in x:
             z[i][j] = liste_RGB[i][0][j]
@@ -122,6 +145,8 @@ def z_functionR(x, y, z, liste_RGB):
 
 
 def z_functionG(x, y, z, liste_RGB):
+    '''Permet de générer les valeurs des coordonées Z pour un affichage 3D (pixels Vert)
+    Utilisée seulement par la fonction plot_3D'''
     for i in y:
         for j in x:
             z[i][j] = liste_RGB[i][1][j]
@@ -129,6 +154,8 @@ def z_functionG(x, y, z, liste_RGB):
 
 
 def z_functionB(x, y, z, liste_RGB):
+    '''Permet de générer les valeurs des coordonées Z pour un affichage 3D (pixels Bleu)
+    Utilisée seulement par la fonction plot_3D'''
     for i in y:
         for j in x:
             z[i][j] = liste_RGB[i][2][j]
@@ -136,6 +163,9 @@ def z_functionB(x, y, z, liste_RGB):
 
 
 def plot_3D(liste_RGB, nbr_pixel, nbr_image, couleur='R'):
+    '''Permet d'afficher un graphique 3D des valeurs RGB des pixels choisis après une capture d'image
+    Les coordonnées X correspondent aux nombre de captures prises, Y correspond au numéro du pixel depuis
+    la liste prédéfinit et les coordonnées Z correspondent à l'intensité R, G ou B d'un pixel selon la capture'''
     x = np.arange(nbr_image)
     y = np.arange(nbr_pixel)
     z = np.zeros((nbr_pixel, nbr_image))

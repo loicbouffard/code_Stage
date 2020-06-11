@@ -13,6 +13,7 @@ def init_port():
 
 
 def ecrit_image(sp):
+    '''Écrit les données reçu de l'arduino dans un fichier .jpg'''
     time.sleep(1)
     size = int(sp.readline().decode('utf-8'))
 
@@ -25,6 +26,7 @@ def ecrit_image(sp):
 
 
 def ecrit_image_RAW(sp):
+    '''Écrit les données reçu de l'arduino dans un fihcier .raw'''
     time.sleep(1)
     size = 640*480
     img = sp.read(size)
@@ -33,7 +35,9 @@ def ecrit_image_RAW(sp):
     sp.reset_input_buffer()
 
 
-nbr_image = 10  # nombre de captures à prendre
+# nombre de captures à prendre
+nbr_image = 10
+# liste des coordonnées des pixels à analyser
 liste_pixels = [(153, 29), (76, 135), (150, 206),
                 (253, 136), (100, 100), (132, 45)]
 # nombre de pixels à comptabiliser les valeurs RGB
@@ -87,4 +91,6 @@ if __name__ == "__main__":
             liste_RGB = actions_image.cree_liste_RGB(1, nbr_pixel)
             actions_image.remplir_listes_RGB(0, liste_RGB, image, liste_pixels)
             actions_image.plot_3D(liste_RGB, nbr_pixel, 1)
+            actions_image.plot_3D(liste_RGB, nbr_pixel, 1, 'G')
+            actions_image.plot_3D(liste_RGB, nbr_pixel, 1, 'B')
     sp.close()
