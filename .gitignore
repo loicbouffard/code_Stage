@@ -128,3 +128,10 @@ dmypy.json
 # Pyre type checker
 .pyre/
 .vscode/settings.json
+test.py
+img_ARDUCAM.jpg
+img_ARDUCAM.raw
+img.jpg
+liste_RGB_capture.txt
+liste_RGB_test_image.txt
+moyenne_colonne.txt
