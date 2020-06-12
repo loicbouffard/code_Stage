@@ -88,18 +88,30 @@ def moyenne_colonne(matR, matG, matB):
     width = len(matR[0])
     height = len(matR)
     list_moyenne = ([0]*width, [0]*width, [0]*width)
-    sommeR = 0
-    sommeG = 0
-    sommeB = 0
+
     for j in range(width):
+        sommeR = 0
+        sommeG = 0
+        sommeB = 0
         for i in range(height):
             sommeR += matR[i, j]
             sommeG += matG[i, j]
             sommeB += matB[i, j]
-        list_moyenne[0][j] = sommeR/height
-        list_moyenne[1][j] = sommeG/height
-        list_moyenne[2][j] = sommeB/height
+        list_moyenne[0][j] = round((sommeR/height), 1)
+        list_moyenne[1][j] = round((sommeG/height), 1)
+        list_moyenne[2][j] = round((sommeB/height), 1)
     return list_moyenne
+
+
+def enregistrer_moyenne(liste_moyenne):
+    '''Permet d'enregistrer la moyenne des colonnes dans un fichier .txt'''
+    with open('moyenne_colonne.txt', 'w') as f:
+        f.write('R:\n')
+        f.write(str(liste_moyenne[0])+'\n')
+        f.write('G:\n')
+        f.write(str(liste_moyenne[1])+'\n')
+        f.write('B:\n')
+        f.write(str(liste_moyenne[2])+'\n')
 
 
 def ligne_horizontale(matR, matG, matB, num_ligne):
@@ -114,7 +126,7 @@ def ligne_horizontale(matR, matG, matB, num_ligne):
     return ligne
 
 
-def enregistrer_liste_RGB(nom_fichier, liste_RGB, nbr_pixel=1):
+def enregistrer_liste_RGB(nom_fichier, liste_RGB, liste_pixels, nbr_pixel=1):
     '''Permet d'enregistrer une liste RGB dans un fichier texte qui prend la forme suivante:
     i correspond au numéro du pixel et la liste est valeur R/G/B du pixel pour le nombre de captures prises
     pRi
@@ -124,6 +136,7 @@ def enregistrer_liste_RGB(nom_fichier, liste_RGB, nbr_pixel=1):
     pBi
     [...]'''
     with open(nom_fichier + '.txt', "w") as f:
+        print(liste_pixels, file=f)
         for i in range(nbr_pixel):
             for j in range(3):
                 if j == 0:
@@ -162,28 +175,51 @@ def z_functionB(x, y, z, liste_RGB):
     return z
 
 
-def plot_3D(liste_RGB, nbr_pixel, nbr_image, couleur='R'):
+def plot_3D(liste_RGB, nbr_pixel, nbr_image):
     '''Permet d'afficher un graphique 3D des valeurs RGB des pixels choisis après une capture d'image
     Les coordonnées X correspondent aux nombre de captures prises, Y correspond au numéro du pixel depuis
     la liste prédéfinit et les coordonnées Z correspondent à l'intensité R, G ou B d'un pixel selon la capture'''
     x = np.arange(nbr_image)
     y = np.arange(nbr_pixel)
-    z = np.zeros((nbr_pixel, nbr_image))
+    zR = np.zeros((nbr_pixel, nbr_image))
+    zG = np.zeros((nbr_pixel, nbr_image))
+    zB = np.zeros((nbr_pixel, nbr_image))
     X, Y = np.meshgrid(x, y)
-    if couleur == 'R':
-        Z = z_functionR(x, y, z, liste_RGB)
-        couleur = 'red'
-    elif couleur == 'G':
-        Z = z_functionG(x, y, z, liste_RGB)
-        couleur = 'green'
-    elif couleur == 'B':
-        Z = z_functionB(x, y, z, liste_RGB)
-        couleur = 'blue'
-    fig = plt.figure()
-    ax = plt.axes(projection="3d")
+    ZR = z_functionR(x, y, zR, liste_RGB)
 
-    ax.plot_surface(X, Y, Z, color=couleur)
+    ZG = z_functionG(x, y, zG, liste_RGB)
+
+    ZB = z_functionB(x, y, zB, liste_RGB)
+
+    fig = plt.figure(1)
+    ax = plt.axes(projection="3d")
+    if nbr_image == 1:
+        ax.plot_wireframe(X, Y, ZR, color='red')
+    else:
+        ax.plot_surface(X, Y, ZR, color='red')
     ax.set_xlabel("nombre d'image")
     ax.set_ylabel('numéro du pixel')
-    ax.set_zlabel('intensité lunineuse (R/G/B)')
+    ax.set_zlabel('intensité lunineuse')
+
+    fig = plt.figure(2)
+    ax = plt.axes(projection="3d")
+
+    if nbr_image == 1:
+        ax.plot_wireframe(X, Y, ZG, color='green')
+    else:
+        ax.plot_surface(X, Y, ZG, color='green')
+    ax.set_xlabel("nombre d'image")
+    ax.set_ylabel('numéro du pixel')
+    ax.set_zlabel('intensité lunineuse')
+
+    fig = plt.figure(3)
+    ax = plt.axes(projection="3d")
+
+    if nbr_image == 1:
+        ax.plot_wireframe(X, Y, ZB, color='blue')
+    else:
+        ax.plot_surface(X, Y, ZB, color='blue')
+    ax.set_xlabel("nombre d'image")
+    ax.set_ylabel('numéro du pixel')
+    ax.set_zlabel('intensité lunineuse')
     plt.show()
