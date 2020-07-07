@@ -111,4 +111,5 @@ if __name__ == "__main__":
             B = actions_image.get_matriceB(image)
             liste_moyenne = actions_image.moyenne_colonne(R, G, B)
             actions_image.enregistrer_moyenne(liste_moyenne)
+            actions_image.plot_moyenne(liste_moyenne)
     sp.close()

@@ -2,6 +2,37 @@ import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
+import serial
+import serial.tools.list_ports
+import time
+
+
+def list_port():
+    '''Retourne une liste des noms des ports séries disponible.'''
+    list_port = []
+    for port in serial.tools.list_ports.comports():
+        list_port.append(port[0])
+    return list_port
+
+
+def init_port(nom):
+    '''Crée objet port série et le retourne.'''
+    sp = serial.Serial(nom, 1000000)
+    sp.timeout = 0.4
+    return sp
+
+
+def capture(sp):
+    '''Envoie la commande de capture à au capteur'''
+    time.sleep(1)
+    size = int(sp.readline().decode('utf-8'))
+
+    img = sp.read(size)
+
+    with open("img_ARDUCAM.jpg", "wb") as f:
+        f.write(img)
+    sp.reset_input_buffer()
+    return Image.open('img_ARDUCAM.jpg')
 
 
 def get_matriceR(image):
@@ -222,4 +253,16 @@ def plot_3D(liste_RGB, nbr_pixel, nbr_image):
     ax.set_xlabel("nombre d'image")
     ax.set_ylabel('numéro du pixel')
     ax.set_zlabel('intensité lunineuse')
+    plt.show()
+
+
+def plot_moyenne(liste_moyenne):
+    '''Permet d'afficher les moyennes R, G, B de chaque colonne sur un meme graphique'''
+    x = np.arange(len(liste_moyenne[0]))
+    R = liste_moyenne[0]
+    G = liste_moyenne[1]
+    B = liste_moyenne[2]
+    plt.plot(x, R, 'r', x, G, 'g', x, B, 'b')
+    plt.xlabel('numéro de colonne')
+    plt.ylabel('intensité lumineuse')
     plt.show()
