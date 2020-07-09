@@ -19,10 +19,10 @@ def ecrit_image(sp):
 
     img = sp.read(size)
 
-    with open("img_ARDUCAM.jpg", "wb") as f:
+    with open("images/img_ARDUCAM.jpg", "wb") as f:
         f.write(img)
     sp.reset_input_buffer()
-    return Image.open('img_ARDUCAM.jpg')
+    return Image.open('images/img_ARDUCAM.jpg')
 
 
 def ecrit_image_RAW(sp):
@@ -30,7 +30,7 @@ def ecrit_image_RAW(sp):
     time.sleep(1)
     size = 640*480
     img = sp.read(size)
-    with open("img_ARDUCAM.raw", "wb") as f:
+    with open("images/img_ARDUCAM.raw", "wb") as f:
         f.write(img)
     sp.reset_input_buffer()
 
@@ -94,13 +94,13 @@ if __name__ == "__main__":
                     i, liste_RGB, image, liste_pixels)
                 print(i)
             actions_image.enregistrer_liste_RGB(
-                'liste_RGB_test_image', liste_RGB, liste_pixels, nbr_pixel)
+                'sauvegarde/liste_RGB_test_image', liste_RGB, liste_pixels, nbr_pixel)
             actions_image.plot_3D(liste_RGB, nbr_pixel, nbr_image)
         elif action == "enregistrer" and image != 0:
             liste_RGB = actions_image.cree_liste_RGB(1, nbr_pixel)
             actions_image.remplir_listes_RGB(0, liste_RGB, image, liste_pixels)
             actions_image.enregistrer_liste_RGB(
-                'liste_RGB_capture', liste_RGB, liste_pixels, nbr_pixel)
+                'sauvegarde/liste_RGB_capture', liste_RGB, liste_pixels, nbr_pixel)
         elif action == "3D" and image != 0:
             liste_RGB = actions_image.cree_liste_RGB(1, nbr_pixel)
             actions_image.remplir_listes_RGB(0, liste_RGB, image, liste_pixels)

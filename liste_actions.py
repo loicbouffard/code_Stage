@@ -1,4 +1,21 @@
 dic_actions = {"320x240": b'0', "640x480": b'1', "1024x768": b'2', "1280x960": b'3',
-               "1600x1200": b'4', "2048x1536": b'5', "2592x1944": b'6', "capture": b'16', "captureRAW": b'19', "JPEG": b'17', "RAW": b'18',
-               "saturation0": b'84', "brightness0": b'100', "contrast0": b'116', "sharpnessoff": b'179', "exposuredefault": b'165'}
-dic_dim = {"320x240": 0.4, "640x480": 1, "1024x768": 2.5}
+               "1600x1200": b'4', "2048x1536": b'5', "2592x1944": b'6', "capture": b'16',
+               "captureRAW": b'19', "JPEG": b'17', "RAW": b'18', "BMP": b'49',
+               "Advanced_AWB": b'64', "Simple_AWB": b'65', "Manual_day": b'66', "Manual_A": b'67', "Manual_cwf": b'68', "Manual_cloudy": b'69',
+               "Saturation4": b'80', "Saturation3": b'81', "Saturation2": b'82', "Saturation1": b'83', "Saturation0": b'84',
+               "Saturation_1": b'85', "Saturation_2": b'86', "Saturation_3": b'87', "Saturation_4": b'88',
+               "Brightness4": b'96', "Brightness3": b'97', "Brightness2": b'98', "Brightness1": b'99', "Brightness0": b'100',
+               "Brightness_1": b'101', "Brightness_2": b'102', "Brightness_3": b'103', "Brightness_4": b'104',
+               "Contrast4": b'112', "Contrast3": b'113', "Contrast2": b'114', "Contrast1": b'115', "Contrast0": b'116',
+               "Contrast_1": b'117', "Contrast_2": b'118', "Contrast_3": b'119', "Contrast_4": b'120',
+               "Auto_Sharpness_default": b'176', "Auto_Sharpness_1": b'177', "Auto_Sharpness_2": b'178',
+               "Manual_Sharpnessoff": b'179', "Manual_Sharpness1": b'180', "Manual_Sharpness2": b'181', "Manual_Sharpness3": b'182', "Manual_Sharpness4": b'183', "Manual_Sharpness5": b'184',
+               "Exposure_1.7EV": b'160', "Exposure_1.3EV": b'161', "Exposure_1EV": b'162', "Exposure_0.7EV": b'163', "Exposure_0.3EV": b'164',
+               "Exposure_default": b'165', "Exposure0.7EV": b'166', "Exposure1EV": b'167', "Exposure1.3EV": b'168', "Exposure1.7EV": b'169',
+               "Mirror": b'192', "Flip": b'193', "Mirror_Flip": b'194', "Normal": b'195',
+               "degree_180": b'128', "degree_150": b'129', "degree_120": b'130', "degree_90": b'131', "degree_60": b'132', "degree_30": b'133',
+               "degree0": b'134', "degree30": b'135', "degree60": b'136', "degree90": b'137', "degree120": b'138', "degree150": b'139',
+               "No Effect": b'144', "BW": b'145', "Bluish": b'146', "Sepia": b'147', "Reddish": b'148', "Greenish": b'149', "Negative": b'150',
+               "Color_bar": b'224', "Color_square": b'225', "BW_square": b'226', "DLI": b'227'}
+dic_dim = {"320x240": 0.4, "640x480": 1, "1024x768": 2.5,
+           "1280x960": 5.5, "1600x1200": 12, "2048x1536": 25, "2592x1944": 55}

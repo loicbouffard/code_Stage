@@ -2,157 +2,275 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1124</width>
-    <height>726</height>
+    <width>1217</width>
+    <height>771</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>1135</width>
+    <height>730</height>
+   </size>
+  </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Camera GUI</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>ulaval_shield.png</normaloff>ulaval_shield.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QTabWidget" name="tabWidget">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>0</y>
-      <width>951</width>
-      <height>561</height>
-     </rect>
+   <layout class="QGridLayout" name="gridLayout" rowstretch="1,0" columnstretch="1,0">
+    <property name="sizeConstraint">
+     <enum>QLayout::SetDefaultConstraint</enum>
     </property>
-    <property name="tabPosition">
-     <enum>QTabWidget::North</enum>
+    <property name="leftMargin">
+     <number>5</number>
     </property>
-    <property name="tabShape">
-     <enum>QTabWidget::Rounded</enum>
-    </property>
-    <property name="currentIndex">
+    <property name="topMargin">
      <number>0</number>
     </property>
-    <property name="usesScrollButtons">
-     <bool>true</bool>
+    <property name="rightMargin">
+     <number>5</number>
     </property>
-    <widget class="QWidget" name="tab_image">
-     <attribute name="title">
-      <string>Image</string>
-     </attribute>
-     <widget class="QLabel" name="image_capteur">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>951</width>
-        <height>531</height>
-       </rect>
+    <property name="bottomMargin">
+     <number>5</number>
+    </property>
+    <item row="0" column="0" colspan="2">
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="sizeIncrement">
+       <size>
+        <width>1</width>
+        <height>1</height>
+       </size>
       </property>
-      <property name="text">
-       <string/>
+      <property name="tabPosition">
+       <enum>QTabWidget::North</enum>
       </property>
-      <property name="pixmap">
-       <pixmap>img_ARDUCAM.jpg</pixmap>
+      <property name="tabShape">
+       <enum>QTabWidget::Rounded</enum>
       </property>
-      <property name="scaledContents">
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
+      <property name="usesScrollButtons">
        <bool>true</bool>
       </property>
+      <widget class="QWidget" name="tab_image">
+       <attribute name="title">
+        <string>Image</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_8">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="image_capteur">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="cursor">
+           <cursorShape>ArrowCursor</cursorShape>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
+          </property>
+          <property name="indent">
+           <number>-1</number>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_graphique">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>1187</width>
+         <height>573</height>
+        </size>
+       </property>
+       <attribute name="title">
+        <string>Graphique</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_9" stretch="0">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="PlotWidget" name="graphicsView_moyenne">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="sizeIncrement">
+           <size>
+            <width>1</width>
+            <height>1</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
-    </widget>
-    <widget class="QWidget" name="tab_graphique">
-     <attribute name="title">
-      <string>Graphique</string>
-     </attribute>
-    </widget>
-   </widget>
-   <widget class="QPushButton" name="bouton_capture">
-    <property name="geometry">
-     <rect>
-      <x>920</x>
-      <y>570</y>
-      <width>121</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Capture</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="bouton_vider">
-    <property name="geometry">
-     <rect>
-      <x>500</x>
-      <y>640</y>
-      <width>93</width>
-      <height>28</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Vider</string>
-    </property>
-   </widget>
-   <widget class="QSpinBox" name="spinBox_nbrCapture">
-    <property name="geometry">
-     <rect>
-      <x>1000</x>
-      <y>620</y>
-      <width>42</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="minimum">
-     <number>1</number>
-    </property>
-    <property name="maximum">
-     <number>100</number>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_nbrCapture">
-    <property name="geometry">
-     <rect>
-      <x>864</x>
-      <y>620</y>
-      <width>111</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Nombre d'itération</string>
-    </property>
-   </widget>
-   <widget class="QProgressBar" name="progressBar_nbrCapture">
-    <property name="geometry">
-     <rect>
-      <x>920</x>
-      <y>650</y>
-      <width>118</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="value">
-     <number>0</number>
-    </property>
-    <property name="textVisible">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QTextBrowser" name="textBrowser">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>561</y>
-      <width>481</width>
-      <height>111</height>
-     </rect>
-    </property>
-   </widget>
+    </item>
+    <item row="1" column="1">
+     <layout class="QFormLayout" name="formLayout">
+      <item row="0" column="0" colspan="2">
+       <widget class="QPushButton" name="bouton_capture">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Capture</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_nbrCapture">
+        <property name="text">
+         <string>Nombre d'itération</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QSpinBox" name="spinBox_nbrCapture">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="2">
+       <widget class="QProgressBar" name="progressBar_nbrCapture">
+        <property name="value">
+         <number>0</number>
+        </property>
+        <property name="textVisible">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="1" column="0">
+     <layout class="QFormLayout" name="formLayout_2">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetDefaultConstraint</enum>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <item row="0" column="0">
+       <widget class="QTextBrowser" name="textBrowser">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>1</horstretch>
+          <verstretch>1</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>480</width>
+          <height>110</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>480</width>
+          <height>110</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="bouton_vider">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>95</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>95</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
+        <property name="text">
+         <string>Vider</string>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1124</width>
+     <width>1217</width>
      <height>26</height>
     </rect>
    </property>
@@ -165,7 +283,7 @@
       <string>Enregistrer</string>
      </property>
      <addaction name="actionGroupe_de_pixels"/>
-     <addaction name="actionMoyenne_des_colonnes"/>
+     <addaction name="actionEnr_moyenne_colonnes"/>
     </widget>
     <addaction name="menuEnregistrer"/>
     <addaction name="actionQuitter"/>
@@ -174,12 +292,14 @@
     <property name="title">
      <string>Port</string>
     </property>
-    <widget class="QMenu" name="menuNom">
+    <widget class="QMenu" name="menuDisponible">
      <property name="title">
-      <string>Nom</string>
+      <string>Disponible</string>
      </property>
+     <addaction name="actionActualiser"/>
+     <addaction name="separator"/>
     </widget>
-    <addaction name="menuNom"/>
+    <addaction name="menuDisponible"/>
     <addaction name="separator"/>
     <addaction name="actionOuvrir"/>
     <addaction name="actionFermer"/>
@@ -206,23 +326,160 @@
      </property>
      <addaction name="actionJPEG"/>
      <addaction name="actionRAW"/>
+     <addaction name="actionBMP"/>
     </widget>
     <widget class="QMenu" name="menuCapture">
      <property name="title">
       <string>Capture</string>
      </property>
-     <addaction name="actionCapture_2"/>
+     <addaction name="actionCapture"/>
      <addaction name="actionTest"/>
+    </widget>
+    <widget class="QMenu" name="menuSaturation">
+     <property name="title">
+      <string>Saturation</string>
+     </property>
+     <addaction name="actionSaturation4"/>
+     <addaction name="actionSaturation3"/>
+     <addaction name="actionSaturation2"/>
+     <addaction name="actionSaturation1"/>
+     <addaction name="actionSaturation0"/>
+     <addaction name="actionSaturation_1"/>
+     <addaction name="actionSaturation_2"/>
+     <addaction name="actionSaturation_3"/>
+     <addaction name="actionSaturation_4"/>
+    </widget>
+    <widget class="QMenu" name="menuBrightness">
+     <property name="title">
+      <string>Brightness</string>
+     </property>
+     <addaction name="actionBrightness4"/>
+     <addaction name="actionBrightness3"/>
+     <addaction name="actionBrightness2"/>
+     <addaction name="actionBrightness1"/>
+     <addaction name="actionBrightness0"/>
+     <addaction name="actionBrightness_1"/>
+     <addaction name="actionBrightness_2"/>
+     <addaction name="actionBrightness_3"/>
+     <addaction name="actionBrightness_4"/>
+    </widget>
+    <widget class="QMenu" name="menuContrast">
+     <property name="title">
+      <string>Contrast</string>
+     </property>
+     <addaction name="actionContrast4"/>
+     <addaction name="actionContrast3"/>
+     <addaction name="actionContrast2"/>
+     <addaction name="actionContrast1"/>
+     <addaction name="actionContrast0"/>
+     <addaction name="actionContrast_1"/>
+     <addaction name="actionContrast_2"/>
+     <addaction name="actionContrast_3"/>
+     <addaction name="actionContrast_4"/>
+    </widget>
+    <widget class="QMenu" name="menuSharpness">
+     <property name="title">
+      <string>Sharpness</string>
+     </property>
+     <addaction name="actionAuto_Sharpness_default"/>
+     <addaction name="actionAuto_Sharpness_1"/>
+     <addaction name="actionAuto_Sharpness_2"/>
+     <addaction name="separator"/>
+     <addaction name="actionManual_Sharpnessoff"/>
+     <addaction name="actionManual_Sharpness1"/>
+     <addaction name="actionManual_Sharpness2"/>
+     <addaction name="actionManual_Sharpness3"/>
+     <addaction name="actionManual_Sharpness4"/>
+     <addaction name="actionManual_Sharpness5"/>
+    </widget>
+    <widget class="QMenu" name="menuExposure">
+     <property name="title">
+      <string>Exposure</string>
+     </property>
+     <addaction name="actionExposure_1_7EV"/>
+     <addaction name="actionExposure_1_3EV"/>
+     <addaction name="actionExposure_1EV"/>
+     <addaction name="actionExposure_0_7EV"/>
+     <addaction name="actionExposure_0_3EV"/>
+     <addaction name="actionExposure_default"/>
+     <addaction name="actionExposure0_7EV"/>
+     <addaction name="actionExposure1EV"/>
+     <addaction name="actionExposure1_3EV"/>
+     <addaction name="actionExposure1_7EV"/>
+    </widget>
+    <widget class="QMenu" name="menuMirror">
+     <property name="title">
+      <string>Mirror</string>
+     </property>
+     <addaction name="actionMirror_2"/>
+     <addaction name="actionFlip"/>
+     <addaction name="actionMirror_Flip"/>
+     <addaction name="actionNormal"/>
+    </widget>
+    <widget class="QMenu" name="menuHue">
+     <property name="title">
+      <string>Hue</string>
+     </property>
+     <addaction name="actiondegree_180"/>
+     <addaction name="actiondegree_150"/>
+     <addaction name="actiondegree_120"/>
+     <addaction name="actiondegree_90"/>
+     <addaction name="actiondegree_60"/>
+     <addaction name="actiondegree_30"/>
+     <addaction name="actiondegree0"/>
+     <addaction name="actiondegree30"/>
+     <addaction name="actiondegree60"/>
+     <addaction name="actiondegree90"/>
+     <addaction name="actiondegree120"/>
+     <addaction name="actiondegree150"/>
+    </widget>
+    <widget class="QMenu" name="menuSpecial_Effect">
+     <property name="title">
+      <string>Special Effect</string>
+     </property>
+     <addaction name="actionNo_Effect"/>
+     <addaction name="actionBW"/>
+     <addaction name="actionBluish"/>
+     <addaction name="actionSepia"/>
+     <addaction name="actionReddish"/>
+     <addaction name="actionGreenish"/>
+     <addaction name="actionNegative"/>
+    </widget>
+    <widget class="QMenu" name="menuTests">
+     <property name="title">
+      <string>Tests</string>
+     </property>
+     <addaction name="actionColor_bar"/>
+     <addaction name="actionColor_square"/>
+     <addaction name="actionBW_square"/>
+     <addaction name="actionDLI"/>
+    </widget>
+    <widget class="QMenu" name="menuLight_mode">
+     <property name="title">
+      <string>Light mode</string>
+     </property>
+     <addaction name="actionAdvanced_AWB"/>
+     <addaction name="actionSimple_AWB"/>
+     <addaction name="actionManual_day"/>
+     <addaction name="actionManual_A"/>
+     <addaction name="actionManual_cwf"/>
+     <addaction name="actionManual_cloudy"/>
     </widget>
     <addaction name="menuDimensions"/>
     <addaction name="menuCapture"/>
     <addaction name="menuFormat"/>
     <addaction name="separator"/>
-    <addaction name="actionSaturation"/>
-    <addaction name="actionBrightness"/>
-    <addaction name="actionContrast"/>
-    <addaction name="actionSharpness"/>
-    <addaction name="actionExposure"/>
+    <addaction name="menuSaturation"/>
+    <addaction name="menuBrightness"/>
+    <addaction name="menuContrast"/>
+    <addaction name="menuSharpness"/>
+    <addaction name="menuExposure"/>
+    <addaction name="menuMirror"/>
+    <addaction name="menuHue"/>
+    <addaction name="menuLight_mode"/>
+    <addaction name="menuSpecial_Effect"/>
+    <addaction name="separator"/>
+    <addaction name="menuTests"/>
    </widget>
    <widget class="QMenu" name="menuGraphique">
     <property name="title">
@@ -247,7 +504,7 @@
     <string>Groupe de pixels</string>
    </property>
   </action>
-  <action name="actionMoyenne_des_colonnes">
+  <action name="actionEnr_moyenne_colonnes">
    <property name="text">
     <string>Moyenne colonnes</string>
    </property>
@@ -340,31 +597,6 @@
     <string>RAW</string>
    </property>
   </action>
-  <action name="actionSaturation">
-   <property name="text">
-    <string>Saturation</string>
-   </property>
-  </action>
-  <action name="actionBrightness">
-   <property name="text">
-    <string>Brightness</string>
-   </property>
-  </action>
-  <action name="actionContrast">
-   <property name="text">
-    <string>Contrast</string>
-   </property>
-  </action>
-  <action name="actionSharpness">
-   <property name="text">
-    <string>Sharpness</string>
-   </property>
-  </action>
-  <action name="actionExposure">
-   <property name="text">
-    <string>Exposure</string>
-   </property>
-  </action>
   <action name="actionMoyenne_colonne">
    <property name="text">
     <string>Moyenne colonnes</string>
@@ -379,13 +611,725 @@
    <property name="text">
     <string>Test</string>
    </property>
+   <property name="toolTip">
+    <string>Test</string>
+   </property>
+   <property name="statusTip">
+    <string/>
+   </property>
+   <property name="whatsThis">
+    <string/>
+   </property>
   </action>
-  <action name="actionCapture_2">
+  <action name="actionCapture">
    <property name="text">
     <string>Capture</string>
    </property>
   </action>
+  <action name="actionActualiser">
+   <property name="text">
+    <string>Actualiser</string>
+   </property>
+  </action>
+  <action name="actionSaturation4">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Saturation4</string>
+   </property>
+  </action>
+  <action name="actionSaturation3">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Saturation3</string>
+   </property>
+  </action>
+  <action name="actionSaturation2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Saturation2</string>
+   </property>
+  </action>
+  <action name="actionSaturation1">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Saturation1</string>
+   </property>
+  </action>
+  <action name="actionSaturation0">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Saturation0</string>
+   </property>
+  </action>
+  <action name="actionSaturation_1">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Saturation_1</string>
+   </property>
+  </action>
+  <action name="actionSaturation_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Saturation_2</string>
+   </property>
+  </action>
+  <action name="actionSaturation_3">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Saturation_3</string>
+   </property>
+  </action>
+  <action name="actionSaturation_4">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Saturation_4</string>
+   </property>
+  </action>
+  <action name="actionBrightness4">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Brightness4</string>
+   </property>
+  </action>
+  <action name="actionBrightness3">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Brightness3</string>
+   </property>
+  </action>
+  <action name="actionBrightness2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Brightness2</string>
+   </property>
+  </action>
+  <action name="actionBrightness1">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Brightness1</string>
+   </property>
+  </action>
+  <action name="actionBrightness0">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Brightness0</string>
+   </property>
+  </action>
+  <action name="actionBrightness_1">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Brightness_1</string>
+   </property>
+  </action>
+  <action name="actionBrightness_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Brightness_2</string>
+   </property>
+  </action>
+  <action name="actionBrightness_3">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Brightness_3</string>
+   </property>
+  </action>
+  <action name="actionBrightness_4">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Brightness_4</string>
+   </property>
+  </action>
+  <action name="actionContrast4">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Contrast4</string>
+   </property>
+  </action>
+  <action name="actionContrast3">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Contrast3</string>
+   </property>
+  </action>
+  <action name="actionContrast2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Contrast2</string>
+   </property>
+  </action>
+  <action name="actionContrast1">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Contrast1</string>
+   </property>
+  </action>
+  <action name="actionContrast0">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Contrast0</string>
+   </property>
+  </action>
+  <action name="actionContrast_1">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Contrast_1</string>
+   </property>
+  </action>
+  <action name="actionContrast_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Contrast_2</string>
+   </property>
+  </action>
+  <action name="actionContrast_3">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Contrast_3</string>
+   </property>
+  </action>
+  <action name="actionContrast_4">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Contrast_4</string>
+   </property>
+  </action>
+  <action name="actionAuto_Sharpness_default">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Auto_Sharpness_default</string>
+   </property>
+  </action>
+  <action name="actionAuto_Sharpness_1">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Auto_Sharpness_1</string>
+   </property>
+  </action>
+  <action name="actionAuto_Sharpness_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Auto_Sharpness_2</string>
+   </property>
+  </action>
+  <action name="actionManual_Sharpnessoff">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Manual_Sharpnessoff</string>
+   </property>
+  </action>
+  <action name="actionManual_Sharpness1">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Manual_Sharpness1</string>
+   </property>
+  </action>
+  <action name="actionManual_Sharpness2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Manual_Sharpness2</string>
+   </property>
+  </action>
+  <action name="actionManual_Sharpness3">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Manual_Sharpness3</string>
+   </property>
+  </action>
+  <action name="actionManual_Sharpness4">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Manual_Sharpness4</string>
+   </property>
+  </action>
+  <action name="actionManual_Sharpness5">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Manual_Sharpness5</string>
+   </property>
+  </action>
+  <action name="actionExposure_1_7EV">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Exposure_1.7EV</string>
+   </property>
+  </action>
+  <action name="actionExposure_1_3EV">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Exposure_1.3EV</string>
+   </property>
+  </action>
+  <action name="actionExposure_1EV">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Exposure_1EV</string>
+   </property>
+  </action>
+  <action name="actionExposure_0_7EV">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Exposure_0.7EV</string>
+   </property>
+  </action>
+  <action name="actionExposure_0_3EV">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Exposure_0.3EV</string>
+   </property>
+  </action>
+  <action name="actionExposure_default">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Exposure_default</string>
+   </property>
+  </action>
+  <action name="actionExposure0_7EV">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Exposure0.7EV</string>
+   </property>
+  </action>
+  <action name="actionExposure1EV">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Exposure1EV</string>
+   </property>
+  </action>
+  <action name="actionExposure1_3EV">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Exposure1.3EV</string>
+   </property>
+  </action>
+  <action name="actionExposure1_7EV">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Exposure1.7EV</string>
+   </property>
+  </action>
+  <action name="actionMirror_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Mirror</string>
+   </property>
+  </action>
+  <action name="actionFlip">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Flip</string>
+   </property>
+  </action>
+  <action name="actionMirror_Flip">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Mirror_Flip</string>
+   </property>
+  </action>
+  <action name="actionNormal">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Normal</string>
+   </property>
+  </action>
+  <action name="actiondegree_180">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>degree_180</string>
+   </property>
+  </action>
+  <action name="actiondegree_150">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>degree_150</string>
+   </property>
+  </action>
+  <action name="actiondegree_120">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>degree_120</string>
+   </property>
+  </action>
+  <action name="actiondegree_90">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>degree_90</string>
+   </property>
+  </action>
+  <action name="actiondegree_60">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>degree_60</string>
+   </property>
+  </action>
+  <action name="actiondegree_30">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>degree_30</string>
+   </property>
+  </action>
+  <action name="actiondegree0">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>degree0</string>
+   </property>
+  </action>
+  <action name="actiondegree30">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>degree30</string>
+   </property>
+  </action>
+  <action name="actiondegree60">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>degree60</string>
+   </property>
+  </action>
+  <action name="actiondegree90">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>degree90</string>
+   </property>
+  </action>
+  <action name="actiondegree120">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>degree120</string>
+   </property>
+  </action>
+  <action name="actiondegree150">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>degree150</string>
+   </property>
+  </action>
+  <action name="actionNo_Effect">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>No Effect</string>
+   </property>
+  </action>
+  <action name="actionBW">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>BW</string>
+   </property>
+  </action>
+  <action name="actionBluish">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Bluish</string>
+   </property>
+  </action>
+  <action name="actionSepia">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Sepia</string>
+   </property>
+  </action>
+  <action name="actionReddish">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Reddish</string>
+   </property>
+  </action>
+  <action name="actionGreenish">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Greenish</string>
+   </property>
+  </action>
+  <action name="actionNegative">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Negative</string>
+   </property>
+  </action>
+  <action name="actionColor_bar">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Color_bar</string>
+   </property>
+  </action>
+  <action name="actionColor_square">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Color_square</string>
+   </property>
+  </action>
+  <action name="actionBW_square">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>BW_square</string>
+   </property>
+  </action>
+  <action name="actionDLI">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>DLI</string>
+   </property>
+  </action>
+  <action name="actionAdvanced_AWB">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Advanced_AWB</string>
+   </property>
+  </action>
+  <action name="actionSimple_AWB">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Simple_AWB</string>
+   </property>
+  </action>
+  <action name="actionManual_day">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Manual_day</string>
+   </property>
+  </action>
+  <action name="actionManual_A">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Manual_A</string>
+   </property>
+  </action>
+  <action name="actionManual_cwf">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Manual_cwf</string>
+   </property>
+  </action>
+  <action name="actionManual_cloudy">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Manual_cloudy</string>
+   </property>
+  </action>
+  <action name="actionBMP">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>BMP</string>
+   </property>
+  </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PlotWidget</class>
+   <extends>QGraphicsView</extends>
+   <header>pyqtgraph</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

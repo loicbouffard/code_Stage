@@ -5,6 +5,7 @@ from mpl_toolkits import mplot3d
 import serial
 import serial.tools.list_ports
 import time
+import liste_actions
 
 
 def list_port():
@@ -24,6 +25,7 @@ def init_port(nom):
 
 def capture(sp):
     '''Envoie la commande de capture à au capteur'''
+    sp.write(liste_actions.dic_actions['capture'])
     time.sleep(1)
     size = int(sp.readline().decode('utf-8'))
 
@@ -33,6 +35,24 @@ def capture(sp):
         f.write(img)
     sp.reset_input_buffer()
     return Image.open('img_ARDUCAM.jpg')
+
+
+def envoie_commande(sp, commande):
+    '''Envoie la commande à l'arduino'''
+    sp.write(liste_actions.dic_actions[commande])
+    if commande in liste_actions.dic_dim:
+        sp.timeout = liste_actions.dic_dim[commande]
+    time.sleep(2)
+    return sp.readline().decode('utf-8')
+
+
+def get_matriceRGB(image):
+    '''Permet d'obtenir la matrice RGB d'une image sous forme de triplets'''
+    matRGB = np.zeros((image.height, image.width), dtype=np.uint8)
+    for i in range(image.height):
+        for j in range(image.width):
+            matRGB[i, j] = image.getpixel((j, i))
+    return matRGB
 
 
 def get_matriceR(image):
@@ -136,7 +156,7 @@ def moyenne_colonne(matR, matG, matB):
 
 def enregistrer_moyenne(liste_moyenne):
     '''Permet d'enregistrer la moyenne des colonnes dans un fichier .txt'''
-    with open('moyenne_colonne.txt', 'w') as f:
+    with open('sauvegarde/moyenne_colonne.txt', 'w') as f:
         f.write('R:\n')
         f.write(str(liste_moyenne[0])+'\n')
         f.write('G:\n')
