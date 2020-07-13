@@ -286,3 +286,17 @@ def plot_moyenne(liste_moyenne):
     plt.xlabel('numéro de colonne')
     plt.ylabel('intensité lumineuse')
     plt.show()
+
+
+def test_images(nbr_image, liste_pixels, sp, progressBar):
+    '''Capture X nombre d'image,enregistre les données dans un fichier txt 
+    et affiche l'intensité RGB de chaque pixel sur des graphiques 3D'''
+    nbr_pixel = len(liste_pixels)
+    liste_RGB = cree_liste_RGB(nbr_image, nbr_pixel)
+    for i in range(nbr_image):
+        image = capture(sp)
+        remplir_listes_RGB(i, liste_RGB, image, liste_pixels)
+        progressBar.setValue(i*100/nbr_pixel)
+    enregistrer_liste_RGB(
+        'sauvegarde/liste_RGB_test_image', liste_RGB, liste_pixels, nbr_pixel)
+    plot_3D(liste_RGB, nbr_pixel, nbr_image)

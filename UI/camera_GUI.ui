@@ -24,7 +24,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>ulaval_shield.png</normaloff>ulaval_shield.png</iconset>
+    <normaloff>../images/ulaval_shield.png</normaloff>../images/ulaval_shield.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout" rowstretch="1,0" columnstretch="1,0">
@@ -333,7 +333,7 @@
       <string>Capture</string>
      </property>
      <addaction name="actionCapture"/>
-     <addaction name="actionTest"/>
+     <addaction name="actionTest_images"/>
     </widget>
     <widget class="QMenu" name="menuSaturation">
      <property name="title">
@@ -486,7 +486,11 @@
      <string>Graphique</string>
     </property>
     <addaction name="actionMoyenne_colonne"/>
+    <addaction name="separator"/>
     <addaction name="actionListe_pixels"/>
+    <addaction name="actionGraphique_pixels"/>
+    <addaction name="separator"/>
+    <addaction name="actionLongueur_d_onde"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPort"/>
@@ -607,9 +611,9 @@
     <string>Liste pixels</string>
    </property>
   </action>
-  <action name="actionTest">
+  <action name="actionTest_images">
    <property name="text">
-    <string>Test</string>
+    <string>Test images</string>
    </property>
    <property name="toolTip">
     <string>Test</string>
@@ -1320,6 +1324,16 @@
    </property>
    <property name="text">
     <string>BMP</string>
+   </property>
+  </action>
+  <action name="actionGraphique_pixels">
+   <property name="text">
+    <string>Graphique pixels</string>
+   </property>
+  </action>
+  <action name="actionLongueur_d_onde">
+   <property name="text">
+    <string>Longueur d'onde</string>
    </property>
   </action>
  </widget>

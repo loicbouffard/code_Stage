@@ -6,17 +6,21 @@ import time
 from pyqtgraph import PlotWidget, plot
 import pyqtgraph
 import numpy as np
+import Dialog_liste_pixels
+import re
+import threading
 
 
 class camera_GUI(QtWidgets.QMainWindow):
 
     def __init__(self):
         super(camera_GUI, self).__init__()
-        uic.loadUi("camera_GUI.ui", self)
+        uic.loadUi("UI/camera_GUI.ui", self)
         self.etat_port = False
         self.nom_portUSB = ''
         self.sp = 0
         self.image = 0
+        self.liste_pos_pixels = []
         self.afficher_port_dispo()
         self.init_graph()
         self.group_Actions()
@@ -31,6 +35,8 @@ class camera_GUI(QtWidgets.QMainWindow):
         self.actionMoyenne_colonne.triggered.connect(self.plot_moyenne_graph)
         self.actionEnr_moyenne_colonnes.triggered.connect(
             self.enregistrer_moyenne_colonnes)
+        self.actionListe_pixels.triggered.connect(self.action_dialog)
+        self.actionTest_images.triggered.connect(self.action_test_images)
 
     def action_quitter(self):
         self.action_fermer()
@@ -61,12 +67,11 @@ class camera_GUI(QtWidgets.QMainWindow):
         group.setExclusive(True)
 
     def setNom_portUSB(self):
-        for port in self.menuDisponible.actions():
-            if port.isChecked() and not self.etat_port:
-                self.nom_portUSB = port.text()
-            elif (self.etat_port):
-                self.textBrowser.append(
-                    f'Fermez le port {self.nom_portUSB} avant de changer de port')
+        if not self.etat_port:
+            self.nom_portUSB = self.sender().text()
+        elif (self.etat_port):
+            self.textBrowser.append(
+                f'Fermez le port {self.nom_portUSB} avant de changer de port')
 
     def group_Actions(self):
         group_dimensions = QtWidgets.QActionGroup(self.menuDimensions)
@@ -151,8 +156,6 @@ class camera_GUI(QtWidgets.QMainWindow):
     def action_ouvrir(self):
         if not self.etat_port:
             try:
-                self.textBrowser.append(
-                    f'Ouverture du port {self.nom_portUSB}')
                 self.sp = actions_image.init_port(self.nom_portUSB)
                 self.etat_port = True
                 time.sleep(2)
@@ -201,6 +204,28 @@ class camera_GUI(QtWidgets.QMainWindow):
 
     def enregistrer_moyenne_colonnes(self):
         actions_image.enregistrer_moyenne(self.liste_moyenne)
+
+    def action_dialog(self):
+        dlg = Dialog_liste_pixels.Dialog(self)
+        if dlg.exec_():
+            liste = re.findall(
+                r'\d+', dlg.textEdit_liste_pixels.toPlainText())
+            if len(liste) == 0:
+                self.textBrowser.append("La liste de pixels est vide")
+            else:
+                self.liste_pos_pixels.clear()
+                for i in range(0, len(liste), 2):
+                    pos = (int(liste[i]), int(liste[i+1]))
+                    self.liste_pos_pixels.append(pos)
+                self.textBrowser.append(str(self.liste_pos_pixels))
+
+    def action_test_images(self):
+        try:
+            threading._start_new_thread(actions_image.test_images,
+                                        (self.spinBox_nbrCapture.value(), self.liste_pos_pixels, self.sp, self.progressBar_nbrCapture))
+            self.progressBar_nbrCapture.reset()
+        except Exception as err:
+            self.textBrowser.append(str(err))
 
 
 if __name__ == "__main__":
