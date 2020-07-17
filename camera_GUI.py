@@ -9,6 +9,9 @@ import numpy as np
 import Dialog_liste_pixels
 import re
 import threading
+import queue
+from PIL import Image
+import pyqtgraph.opengl as gl
 
 
 class camera_GUI(QtWidgets.QMainWindow):
@@ -21,22 +24,49 @@ class camera_GUI(QtWidgets.QMainWindow):
         self.sp = 0
         self.image = 0
         self.liste_pos_pixels = []
+        self.liste_moyenne = []
         self.afficher_port_dispo()
         self.init_graph()
         self.group_Actions()
+        self.queue = queue.Queue()
+        # self.init_GLwidget()
 
         self.bouton_vider.clicked.connect(self.action_bouton_vider)
-        self.bouton_capture.clicked.connect(self.action_bouton_capture)
-        self.actionCapture.triggered.connect(self.action_bouton_capture)
+        self.bouton_capture.clicked.connect(self.thread_action_bouton_capture)
+        self.actionCapture.triggered.connect(self.thread_action_bouton_capture)
         self.actionQuitter.triggered.connect(self.action_quitter)
-        self.actionOuvrir.triggered.connect(self.action_ouvrir)
+        self.actionOuvrir.triggered.connect(self.thread_action_ouvrir)
         self.actionFermer.triggered.connect(self.action_fermer)
         self.actionActualiser.triggered.connect(self.afficher_port_dispo)
-        self.actionMoyenne_colonne.triggered.connect(self.plot_moyenne_graph)
+        self.actionMoyenne_colonne.triggered.connect(
+            self.plot_moyenne_graph)
         self.actionEnr_moyenne_colonnes.triggered.connect(
             self.enregistrer_moyenne_colonnes)
         self.actionListe_pixels.triggered.connect(self.action_dialog)
-        self.actionTest_images.triggered.connect(self.action_test_images)
+        self.actionTest_images.triggered.connect(
+            self.thread_action_test_images)
+        self.bouton_moy_col.clicked.connect(
+            lambda: self.stackedWidget.setCurrentIndex(2))
+        self.bouton_cap_test.clicked.connect(
+            lambda: self.stackedWidget.setCurrentIndex(1))
+        self.bouton_LO.clicked.connect(
+            lambda: self.stackedWidget.setCurrentIndex(0))
+        self.actionImage.triggered.connect(self.action_import_image)
+        self.bouton_graph_moy.clicked.connect(
+            lambda: self.stackedWidget_graph.setCurrentIndex(1))
+        self.bouton_graph3D.clicked.connect(
+            lambda: self.stackedWidget_graph.setCurrentIndex(0))
+        self.bouton_graph_LO.clicked.connect(
+            lambda: self.stackedWidget_graph.setCurrentIndex(2))
+        self.bouton_im.clicked.connect(
+            lambda: self.stackedWidget_Images.setCurrentIndex(1))
+        self.bouton_imR.clicked.connect(
+            lambda: self.stackedWidget_Images.setCurrentIndex(2))
+        self.bouton_imG.clicked.connect(
+            lambda: self.stackedWidget_Images.setCurrentIndex(3))
+        self.bouton_imB.clicked.connect(
+            lambda: self.stackedWidget_Images.setCurrentIndex(0))
+        self.actionLongueur_d_onde.triggered.connect(self.action_LO)
 
     def action_quitter(self):
         self.action_fermer()
@@ -45,12 +75,16 @@ class camera_GUI(QtWidgets.QMainWindow):
     def action_bouton_vider(self):
         self.textBrowser.clear()
 
+    def thread_action_bouton_capture(self):
+        t = threading.Thread(target=self.action_bouton_capture)
+        t.start()
+
     def action_bouton_capture(self):
         try:
             self.image = actions_image.capture(self.sp)
-            self.image_capteur.setPixmap(
-                QtGui.QPixmap('images/img_ARDUCAM.jpg'))
+            self.update_image()
             self.sp.reset_input_buffer()
+            self.textBrowser.append("Capture faite")
         except Exception as err:
             self.textBrowser.append(str(err))
 
@@ -104,11 +138,24 @@ class camera_GUI(QtWidgets.QMainWindow):
             group_contrast.addAction(cont)
         group_contrast.setExclusive(True)
 
-        group_sharpness = QtWidgets.QActionGroup(self.menuSharpness)
+        group_sharpness_auto = QtWidgets.QActionGroup(self.menuSharpness)
+        group_sharpness_manual = QtWidgets.QActionGroup(self.menuSharpness)
         for sharp in self.menuSharpness.actions():
             sharp.triggered.connect(self.action_commandes)
-            group_sharpness.addAction(sharp)
-        group_sharpness.setExclusive(True)
+
+        group_sharpness_auto.addAction(self.actionAuto_Sharpness_default)
+        group_sharpness_auto.addAction(self.actionAuto_Sharpness_1)
+        group_sharpness_auto.addAction(self.actionAuto_Sharpness_2)
+
+        group_sharpness_manual.addAction(self.actionManual_Sharpnessoff)
+        group_sharpness_manual.addAction(self.actionManual_Sharpness1)
+        group_sharpness_manual.addAction(self.actionManual_Sharpness2)
+        group_sharpness_manual.addAction(self.actionManual_Sharpness3)
+        group_sharpness_manual.addAction(self.actionManual_Sharpness4)
+        group_sharpness_manual.addAction(self.actionManual_Sharpness5)
+
+        group_sharpness_auto.setExclusive(True)
+        group_sharpness_manual.setExclusive(True)
 
         group_exposure = QtWidgets.QActionGroup(self.menuExposure)
         for expo in self.menuExposure.actions():
@@ -153,9 +200,17 @@ class camera_GUI(QtWidgets.QMainWindow):
         except Exception as err:
             self.textBrowser.append(str(err))
 
+    def thread_action_ouvrir(self):
+        t = threading.Thread(target=self.action_ouvrir)
+        t.start()
+
     def action_ouvrir(self):
         if not self.etat_port:
             try:
+                # t = threading.Thread(target=lambda q, arg1: q.put(
+                #     actions_image.init_port(arg1)), args=(self.queue, self.nom_portUSB))
+                # t.start()
+                # t.join()
                 self.sp = actions_image.init_port(self.nom_portUSB)
                 self.etat_port = True
                 time.sleep(2)
@@ -177,21 +232,29 @@ class camera_GUI(QtWidgets.QMainWindow):
             self.textBrowser.append(self.sp.readline().decode('utf-8'))
         self.sp.reset_input_buffer()
 
+    def thread_plot_moyenne_graph(self):
+        t = threading.Thread(target=self.plot_moyenne_graph)
+        t.start()
+
     def plot_moyenne_graph(self):
         R = actions_image.get_matriceR(self.image)
         G = actions_image.get_matriceG(self.image)
         B = actions_image.get_matriceB(self.image)
+        # t = threading.Thread(target=lambda q, arg1, arg2, arg3: q.put(
+        #     actions_image.moyenne_colonne(arg1, arg2, arg3)), args=(self.queue, R, G, B))
+        # t.start()
+        # t.join()
         self.liste_moyenne = actions_image.moyenne_colonne(R, G, B)
         x = np.arange(len(self.liste_moyenne[0]))
         R = self.liste_moyenne[0]
         G = self.liste_moyenne[1]
         B = self.liste_moyenne[2]
-        penR = pyqtgraph.mkPen(color='r')
-        penG = pyqtgraph.mkPen(color='g')
-        penB = pyqtgraph.mkPen(color='b')
-        self.graphicsView_moyenne.plot(x, R, name="Pixels Rouges", pen=penR)
-        self.graphicsView_moyenne.plot(x, G, name="Pixels Verts", pen=penG)
-        self.graphicsView_moyenne.plot(x, B, name="Pixels bleus", pen=penB)
+
+        self.plot_moyenneR.setData(x, R)
+        self.plot_moyenneG.setData(x, G)
+        self.plot_moyenneB.setData(x, B)
+        actions_image.enregistrer_moyenne(self.liste_moyenne)
+        self.update_tab_donnee_moy()
 
     def init_graph(self):
         self.liste_moyenne = []
@@ -202,8 +265,35 @@ class camera_GUI(QtWidgets.QMainWindow):
         self.graphicsView_moyenne.addLegend()
         self.graphicsView_moyenne.showGrid(x=True, y=True)
 
+        penR = pyqtgraph.mkPen(color='r')
+        penG = pyqtgraph.mkPen(color='g')
+        penB = pyqtgraph.mkPen(color='b')
+
+        self.plot_moyenneR = self.graphicsView_moyenne.plot(
+            [0], [0], name="Pixels Rouges", pen=penR)
+        self.plot_moyenneG = self.graphicsView_moyenne.plot(
+            [0], [0], name="Pixels Verts", pen=penG)
+        self.plot_moyenneB = self.graphicsView_moyenne.plot(
+            [0], [0], name="Pixels bleus", pen=penB)
+
+        # Graphique longueurs d'onde
+        self.graphicsView_LO.setTitle(
+            "Intensité lumineuse en fonction de la longueur d'onde")
+        self.graphicsView_LO.setLabel("left", "Intensité")
+        self.graphicsView_LO.setLabel("bottom", "Longueur d'onde (nm)")
+        self.graphicsView_LO.showGrid(x=True, y=True)
+
+        self.plot_LO = self.graphicsView_LO.plot([0], [0])
+
     def enregistrer_moyenne_colonnes(self):
-        actions_image.enregistrer_moyenne(self.liste_moyenne)
+        if self.image != 0:
+            if len(self.liste_moyenne) == 0:
+                self.plot_moyenne_graph()
+            actions_image.enregistrer_moyenne(self.liste_moyenne)
+            self.update_tab_donnee_moy()
+            self.liste_moyenne = []
+        else:
+            self.textBrowser.append("Prendre une capture")
 
     def action_dialog(self):
         dlg = Dialog_liste_pixels.Dialog(self)
@@ -219,13 +309,89 @@ class camera_GUI(QtWidgets.QMainWindow):
                     self.liste_pos_pixels.append(pos)
                 self.textBrowser.append(str(self.liste_pos_pixels))
 
+    def thread_action_test_images(self):
+        t = threading.Thread(target=self.action_test_images)
+        t.start()
+
     def action_test_images(self):
         try:
-            threading._start_new_thread(actions_image.test_images,
-                                        (self.spinBox_nbrCapture.value(), self.liste_pos_pixels, self.sp, self.progressBar_nbrCapture))
-            self.progressBar_nbrCapture.reset()
+            actions_image.test_images(self.spinBox_nbrCapture.value(),
+                                      self.liste_pos_pixels, self.sp, self.progressBar_nbrCapture)
+            self.update_image()
+            self.update_tab_donnee_test_cap()
+        except ZeroDivisionError:
+            self.textBrowser.append("Remplir la liste de pixels avant")
         except Exception as err:
             self.textBrowser.append(str(err))
+
+    def update_tab_donnee_test_cap(self):
+        with open('sauvegarde/liste_RGB_test_image.txt', 'r') as fich:
+            text = fich.read()
+        self.textBrowser_testCapture.setText(text)
+
+    def update_tab_donnee_moy(self):
+        with open('sauvegarde/moyenne_colonne.txt', 'r') as fich:
+            text = fich.read()
+        self.textBrowser_moy_colonne.setText(text)
+
+    def update_tab_donne_LO(self):
+        with open('sauvegarde/longueur_onde.txt', 'r') as fich:
+            text = fich.read()
+        self.textBrowser_LO.setText(text)
+
+    def update_image(self):
+        self.image_capteur.setPixmap(
+            QtGui.QPixmap('images/img_ARDUCAM.jpg'))
+        self.image_capteurR.setPixmap(
+            QtGui.QPixmap('images/img_R.jpg'))
+        self.image_capteurG.setPixmap(
+            QtGui.QPixmap('images/img_G.jpg'))
+        self.image_capteurB.setPixmap(
+            QtGui.QPixmap('images/img_B.jpg'))
+
+    def action_import_image(self):
+        filePath = QtWidgets.QFileDialog.getOpenFileName(
+            filter="Image Files (*.png *.jpg *.bmp)")[0]
+        self.image = Image.open(filePath)
+        actions_image.enregistre_image_RGB(self.image)
+
+        self.image_capteur.setPixmap(
+            QtGui.QPixmap(filePath))
+        self.image_capteurR.setPixmap(
+            QtGui.QPixmap('images/img_R.jpg'))
+        self.image_capteurG.setPixmap(
+            QtGui.QPixmap('images/img_G.jpg'))
+        self.image_capteurB.setPixmap(
+            QtGui.QPixmap('images/img_B.jpg'))
+
+    def init_GLwidget(self):
+        self.GL_Graph = gl.GLViewWidget(self.openGLWidget)
+        # self.page_4.addAction(self.GL_Graph)
+        #self.GL_Graph.resizeGL(500, 500)
+        axes = gl.GLAxisItem()
+        self.GL_Graph.addItem(axes)
+
+    def thread_action_LO(self):
+        t = threading.Thread(target=self.action_LO)
+        t.start()
+
+    def action_LO(self):
+        if self.image != 0:
+            if len(self.liste_moyenne) != 0:
+                liste = actions_image.longueur_Donde(self.liste_moyenne)
+                x = [l[1] for l in liste]
+                y = [i[0] for i in liste]
+                self.plot_LO.setData(x, y)
+            else:
+                self.plot_moyenne_graph()
+                liste = actions_image.longueur_Donde(self.liste_moyenne)
+                x = [l[1] for l in liste]
+                y = [i[0] for i in liste]
+                self.plot_LO.setData(x, y)
+            actions_image.enregistrer_LO(liste)
+            self.update_tab_donne_LO()
+        else:
+            self.textBrowser.append("Il n'y a pas d'image à traiter")
 
 
 if __name__ == "__main__":

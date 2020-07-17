@@ -6,6 +6,8 @@ import serial
 import serial.tools.list_ports
 import time
 import liste_actions
+import pathlib
+import longueur_onde
 
 
 def list_port():
@@ -31,10 +33,25 @@ def capture(sp):
 
     img = sp.read(size)
 
-    with open("img_ARDUCAM.jpg", "wb") as f:
+    with open("images/img_ARDUCAM.jpg", "wb") as f:
         f.write(img)
     sp.reset_input_buffer()
-    return Image.open('img_ARDUCAM.jpg')
+    img = Image.open('images/img_ARDUCAM.jpg')
+    enregistre_image_RGB(img)
+    return img
+
+
+def enregistre_image_RGB(image):
+    '''Enregistre l'image en grayscale des trois intensités R, G, B'''
+    path = str(pathlib.Path().absolute() / 'images/')
+    imR = image.getchannel(0)
+    imR.save(path + "\img_R.jpg")
+
+    imG = image.getchannel(1)
+    imG.save(path + "\img_G.jpg")
+
+    imB = image.getchannel(2)
+    imB.save(path + "\img_B.jpg")
 
 
 def envoie_commande(sp, commande):
@@ -163,6 +180,15 @@ def enregistrer_moyenne(liste_moyenne):
         f.write(str(liste_moyenne[1])+'\n')
         f.write('B:\n')
         f.write(str(liste_moyenne[2])+'\n')
+        f.write('L:\n')
+        f.write(str(L_list(liste_moyenne)))
+
+
+def enregistrer_LO(liste_LO):
+    '''Permet d'enregistrer les données du graphique de l'intensité en fonction
+     de la longueur d'onde dans un fichier .txt'''
+    with open('sauvegarde/longueur_onde.txt', 'w') as f:
+        f.write(str(liste_LO))
 
 
 def ligne_horizontale(matR, matG, matB, num_ligne):
@@ -300,3 +326,23 @@ def test_images(nbr_image, liste_pixels, sp, progressBar):
     enregistrer_liste_RGB(
         'sauvegarde/liste_RGB_test_image', liste_RGB, liste_pixels, nbr_pixel)
     plot_3D(liste_RGB, nbr_pixel, nbr_image)
+    progressBar.setValue(0)
+
+
+def L_list(liste_moyenne):
+    '''Convertit une liste de moyenne RGB en un liste de grayscale '''
+    length = len(liste_moyenne[0])
+    L = [0]*length
+    for i in range(length):
+        L[i] = round((liste_moyenne[0][i] * 0.299) +
+                     (liste_moyenne[1][i] * 0.587) + (liste_moyenne[2][i] * 0.114), 1)
+    return L
+
+
+def longueur_Donde(liste_moyenne, nbr_param=2):
+    '''Permet d'obtenir une liste de tuples contenant [(H,Smid,norme,lambda)...] ou [(norme,lambda)...]'''
+    liste_0_1 = longueur_onde.convertion_0_1(liste_moyenne)
+    liste_mmclhssl = longueur_onde.liste_MMCLHSSL(liste_0_1)
+    liste_norme = longueur_onde.liste_norme_RGB(liste_0_1)
+
+    return longueur_onde.liste_tuple_param(liste_mmclhssl, liste_norme, nbr_param)
