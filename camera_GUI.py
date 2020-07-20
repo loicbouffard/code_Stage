@@ -8,13 +8,21 @@ import pyqtgraph
 import numpy as np
 import Dialog_liste_pixels
 import re
-import threading
-import queue
 from PIL import Image
 import pyqtgraph.opengl as gl
+import serial
+import classeThreads
+import numpy
 
 
 class camera_GUI(QtWidgets.QMainWindow):
+
+    port_ouvert = QtCore.pyqtSignal(serial.Serial)
+    port_capture = QtCore.pyqtSignal(serial.Serial)
+    matRGB = QtCore.pyqtSignal(numpy.ndarray, numpy.ndarray, numpy.ndarray)
+    testImage = QtCore.pyqtSignal(
+        int, list, serial.Serial, QtWidgets.QProgressBar)
+    longDonde = QtCore.pyqtSignal(tuple)
 
     def __init__(self):
         super(camera_GUI, self).__init__()
@@ -28,14 +36,14 @@ class camera_GUI(QtWidgets.QMainWindow):
         self.afficher_port_dispo()
         self.init_graph()
         self.group_Actions()
-        self.queue = queue.Queue()
+        self.init_worker()
         # self.init_GLwidget()
 
         self.bouton_vider.clicked.connect(self.action_bouton_vider)
-        self.bouton_capture.clicked.connect(self.thread_action_bouton_capture)
-        self.actionCapture.triggered.connect(self.thread_action_bouton_capture)
+        self.bouton_capture.clicked.connect(self.action_bouton_capture)
+        self.actionCapture.triggered.connect(self.action_bouton_capture)
         self.actionQuitter.triggered.connect(self.action_quitter)
-        self.actionOuvrir.triggered.connect(self.thread_action_ouvrir)
+        self.actionOuvrir.triggered.connect(self.action_ouvrir)
         self.actionFermer.triggered.connect(self.action_fermer)
         self.actionActualiser.triggered.connect(self.afficher_port_dispo)
         self.actionMoyenne_colonne.triggered.connect(
@@ -44,7 +52,7 @@ class camera_GUI(QtWidgets.QMainWindow):
             self.enregistrer_moyenne_colonnes)
         self.actionListe_pixels.triggered.connect(self.action_dialog)
         self.actionTest_images.triggered.connect(
-            self.thread_action_test_images)
+            self.action_test_images)
         self.bouton_moy_col.clicked.connect(
             lambda: self.stackedWidget.setCurrentIndex(2))
         self.bouton_cap_test.clicked.connect(
@@ -75,22 +83,24 @@ class camera_GUI(QtWidgets.QMainWindow):
     def action_bouton_vider(self):
         self.textBrowser.clear()
 
-    def thread_action_bouton_capture(self):
-        t = threading.Thread(target=self.action_bouton_capture)
-        t.start()
-
     def action_bouton_capture(self):
         try:
-            self.image = actions_image.capture(self.sp)
-            self.update_image()
-            self.sp.reset_input_buffer()
-            self.textBrowser.append("Capture faite")
+            self.port_capture.emit(self.sp)
+        except TypeError:
+            self.textBrowser.append(
+                'Ouvrir un port avant de faire une capture')
         except Exception as err:
             self.textBrowser.append(str(err))
 
+    @QtCore.pyqtSlot(Image.Image)
+    def recoitCapture(self, img):
+        self.image = img
+        self.update_image()
+        self.sp.reset_input_buffer()
+        self.textBrowser.append("Capture faite")
+
     def afficher_port_dispo(self):
         list = actions_image.list_port()
-        # list = ['COM1', 'COM2', 'COM3']
         group = QtWidgets.QActionGroup(self.menuDisponible)
         for port in list:
             action = QtWidgets.QAction(
@@ -200,26 +210,22 @@ class camera_GUI(QtWidgets.QMainWindow):
         except Exception as err:
             self.textBrowser.append(str(err))
 
-    def thread_action_ouvrir(self):
-        t = threading.Thread(target=self.action_ouvrir)
-        t.start()
-
     def action_ouvrir(self):
         if not self.etat_port:
             try:
-                # t = threading.Thread(target=lambda q, arg1: q.put(
-                #     actions_image.init_port(arg1)), args=(self.queue, self.nom_portUSB))
-                # t.start()
-                # t.join()
                 self.sp = actions_image.init_port(self.nom_portUSB)
                 self.etat_port = True
-                time.sleep(2)
-                self.read_sp()
+                self.port_ouvert.emit(self.sp)
             except Exception as err:
                 self.textBrowser.append(str(err))
         else:
             self.textBrowser.append(
                 f'Le port {self.nom_portUSB} est déjà ouvert')
+
+    @QtCore.pyqtSlot(str)
+    def recoitPort(self, text):
+        self.sp.reset_input_buffer()
+        self.textBrowser.append(text)
 
     def action_fermer(self):
         if self.sp != 0 and self.etat_port:
@@ -227,34 +233,26 @@ class camera_GUI(QtWidgets.QMainWindow):
             self.etat_port = False
             self.textBrowser.append(f'Port {self.nom_portUSB} fermé')
 
-    def read_sp(self):
-        while(self.sp.in_waiting > 0):
-            self.textBrowser.append(self.sp.readline().decode('utf-8'))
-        self.sp.reset_input_buffer()
-
-    def thread_plot_moyenne_graph(self):
-        t = threading.Thread(target=self.plot_moyenne_graph)
-        t.start()
-
     def plot_moyenne_graph(self):
-        R = actions_image.get_matriceR(self.image)
-        G = actions_image.get_matriceG(self.image)
-        B = actions_image.get_matriceB(self.image)
-        # t = threading.Thread(target=lambda q, arg1, arg2, arg3: q.put(
-        #     actions_image.moyenne_colonne(arg1, arg2, arg3)), args=(self.queue, R, G, B))
-        # t.start()
-        # t.join()
-        self.liste_moyenne = actions_image.moyenne_colonne(R, G, B)
-        x = np.arange(len(self.liste_moyenne[0]))
-        R = self.liste_moyenne[0]
-        G = self.liste_moyenne[1]
-        B = self.liste_moyenne[2]
+        if self.image != 0:
+            R = actions_image.get_matriceR(self.image)
+            G = actions_image.get_matriceG(self.image)
+            B = actions_image.get_matriceB(self.image)
+            self.matRGB.emit(R, G, B)
+        else:
+            self.textBrowser.append("Il n'y a pas d'image à traiter")
 
-        self.plot_moyenneR.setData(x, R)
-        self.plot_moyenneG.setData(x, G)
-        self.plot_moyenneB.setData(x, B)
+    @QtCore.pyqtSlot(tuple, list, list, list)
+    def recoitListeMoyenne(self, liste, listeR, listeG, listeB):
+        self.liste_moyenne = liste
+        x = np.arange(len(self.liste_moyenne[0]))
+
+        self.plot_moyenneR.setData(x, listeR)
+        self.plot_moyenneG.setData(x, listeG)
+        self.plot_moyenneB.setData(x, listeB)
         actions_image.enregistrer_moyenne(self.liste_moyenne)
         self.update_tab_donnee_moy()
+        self.action_LO()
 
     def init_graph(self):
         self.liste_moyenne = []
@@ -309,12 +307,11 @@ class camera_GUI(QtWidgets.QMainWindow):
                     self.liste_pos_pixels.append(pos)
                 self.textBrowser.append(str(self.liste_pos_pixels))
 
-    def thread_action_test_images(self):
-        t = threading.Thread(target=self.action_test_images)
-        t.start()
-
     def action_test_images(self):
         try:
+            # self.testImage.emit(self.spinBox_nbrCapture.value(),
+            #                     self.liste_pos_pixels, self.sp, self.progressBar_nbrCapture)
+            # À implémenter avec la classe Worker lorsque OpenGL va fonctionner pour plot 3D
             actions_image.test_images(self.spinBox_nbrCapture.value(),
                                       self.liste_pos_pixels, self.sp, self.progressBar_nbrCapture)
             self.update_image()
@@ -371,27 +368,38 @@ class camera_GUI(QtWidgets.QMainWindow):
         axes = gl.GLAxisItem()
         self.GL_Graph.addItem(axes)
 
-    def thread_action_LO(self):
-        t = threading.Thread(target=self.action_LO)
-        t.start()
-
     def action_LO(self):
         if self.image != 0:
             if len(self.liste_moyenne) != 0:
-                liste = actions_image.longueur_Donde(self.liste_moyenne)
-                x = [l[1] for l in liste]
-                y = [i[0] for i in liste]
-                self.plot_LO.setData(x, y)
+                self.longDonde.emit(self.liste_moyenne)
             else:
                 self.plot_moyenne_graph()
-                liste = actions_image.longueur_Donde(self.liste_moyenne)
-                x = [l[1] for l in liste]
-                y = [i[0] for i in liste]
-                self.plot_LO.setData(x, y)
-            actions_image.enregistrer_LO(liste)
-            self.update_tab_donne_LO()
         else:
             self.textBrowser.append("Il n'y a pas d'image à traiter")
+
+    @QtCore.pyqtSlot(list, list, list)
+    def recoitLongDonde(self, liste, x, y):
+        self.plot_LO.setData(x, y)
+        actions_image.enregistrer_LO(liste)
+
+    def init_worker(self):
+        self.worker = classeThreads.Worker()
+        self.worker_thread = QtCore.QThread()
+
+        self.port_ouvert.connect(self.worker.read_port)
+        self.worker.read.connect(self.recoitPort)
+
+        self.port_capture.connect(self.worker.capture)
+        self.worker.image.connect(self.recoitCapture)
+
+        self.matRGB.connect(self.worker.liste_moy)
+        self.worker.liste_moyenne.connect(self.recoitListeMoyenne)
+
+        self.longDonde.connect(self.worker.longeur_donde)
+        self.worker.liste_LO.connect(self.recoitLongDonde)
+
+        self.worker.moveToThread(self.worker_thread)
+        self.worker_thread.start()
 
 
 if __name__ == "__main__":
