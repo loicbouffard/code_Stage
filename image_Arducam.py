@@ -4,23 +4,27 @@ import time
 import liste_actions
 import actions_image
 from PIL import Image
+import datetime
 
 
 def init_port():
     sp = serial.Serial('COM5', 1000000)
-    sp.timeout = 0.4
+    sp.set_buffer_size(rx_size=20000, tx_size=20000)
     return sp
 
 
 def ecrit_image(sp):
     '''Écrit les données reçu de l'arduino dans un fichier .jpg'''
-    time.sleep(1)
-    size = int(sp.readline().decode('utf-8'))
-
-    img = sp.read(size)
-
+    time.sleep(1.4)
+    begin = datetime.datetime.now()
     with open("images/img_ARDUCAM.jpg", "wb") as f:
-        f.write(img)
+        buff = b''
+        while sp.in_waiting > 0:
+            buff += sp.read_all()
+            time.sleep(0.09)
+        f.write(buff)
+    end = datetime.datetime.now()
+    print(end-begin)
     sp.reset_input_buffer()
     return Image.open('images/img_ARDUCAM.jpg')
 
@@ -68,8 +72,8 @@ if __name__ == "__main__":
         action = input('action: ')
         if (action in liste_actions.dic_actions):
             commande = liste_actions.dic_actions[action]
-            if (action in liste_actions.dic_dim):
-                sp.timeout = liste_actions.dic_dim[action]
+            # if (action in liste_actions.dic_dim):
+            #sp.timeout = liste_actions.dic_dim[action]
             sp.write(commande)
         if action == "RAW":
             sp.timeout = 10

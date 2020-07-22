@@ -102,6 +102,10 @@ class camera_GUI(QtWidgets.QMainWindow):
     def afficher_port_dispo(self):
         list = actions_image.list_port()
         group = QtWidgets.QActionGroup(self.menuDisponible)
+        length = len(self.menuDisponible.actions())-2
+        for i in range(length):
+            self.menuDisponible.removeAction(
+                self.menuDisponible.actions()[i+2])
         for port in list:
             action = QtWidgets.QAction(
                 port, self.menuDisponible, checkable=True)
@@ -207,6 +211,7 @@ class camera_GUI(QtWidgets.QMainWindow):
         try:
             self.textBrowser.append(actions_image.envoie_commande(
                 self.sp, self.sender().text()))
+            self.sp.reset_input_buffer()
         except Exception as err:
             self.textBrowser.append(str(err))
 

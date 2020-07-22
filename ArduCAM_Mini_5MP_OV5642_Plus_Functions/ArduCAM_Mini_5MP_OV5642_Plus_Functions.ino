@@ -826,7 +826,6 @@ uint8_t read_fifo_burst(ArduCAM myCAM)
   uint8_t temp = 0, temp_last = 0;
   uint32_t length = 0;
   length = myCAM.read_fifo_length();
-  Serial.println(length, DEC);
   if (length >= MAX_FIFO_SIZE) //512 kb
   {
     Serial.println(F("ACK CMD Over size. END"));

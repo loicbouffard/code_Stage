@@ -21,20 +21,22 @@ def list_port():
 def init_port(nom):
     '''Crée objet port série et le retourne.'''
     sp = serial.Serial(nom, 1000000)
-    sp.timeout = 0.4
+    sp.set_buffer_size(rx_size=20000, tx_size=20000)
     return sp
 
 
 def capture(sp):
     '''Envoie la commande de capture à au capteur'''
     sp.write(liste_actions.dic_actions['capture'])
-    time.sleep(1)
-    size = int(sp.readline().decode('utf-8'))
+    time.sleep(1.4)
 
-    img = sp.read(size)
-
+    buff = b''
     with open("images/img_ARDUCAM.jpg", "wb") as f:
-        f.write(img)
+
+        while sp.in_waiting > 0:
+            buff += sp.read_all()
+            time.sleep(0.09)  # 0.09
+        f.write(buff)
     sp.reset_input_buffer()
     img = Image.open('images/img_ARDUCAM.jpg')
     enregistre_image_RGB(img)
@@ -57,8 +59,8 @@ def enregistre_image_RGB(image):
 def envoie_commande(sp, commande):
     '''Envoie la commande à l'arduino'''
     sp.write(liste_actions.dic_actions[commande])
-    if commande in liste_actions.dic_dim:
-        sp.timeout = liste_actions.dic_dim[commande]
+    # if commande in liste_actions.dic_dim:
+    #     sp.timeout = liste_actions.dic_dim[commande]
     time.sleep(2)
     return sp.readline().decode('utf-8')
 
