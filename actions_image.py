@@ -1,5 +1,5 @@
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageChops
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
 import serial
@@ -8,6 +8,7 @@ import time
 import liste_actions
 import pathlib
 import longueur_onde
+import os
 
 
 def list_port():
@@ -20,40 +21,75 @@ def list_port():
 
 def init_port(nom):
     '''Crée objet port série et le retourne.'''
-    sp = serial.Serial(nom, 1000000)
+    sp = serial.Serial(nom, 1000000, timeout=1)
     sp.set_buffer_size(rx_size=20000, tx_size=20000)
     return sp
 
 
-def capture(sp):
+def capture(sp, format='.jpg', img_bruit=None):
     '''Envoie la commande de capture à au capteur'''
     sp.write(liste_actions.dic_actions['capture'])
-    time.sleep(1.4)
-
+    time.sleep(1.4)  # 1.4
     buff = b''
-    with open("images/img_ARDUCAM.jpg", "wb") as f:
+    with open("images/img_ARDUCAM"+format, "wb") as f:
 
         while sp.in_waiting > 0:
             buff += sp.read_all()
             time.sleep(0.09)  # 0.09
         f.write(buff)
     sp.reset_input_buffer()
-    img = Image.open('images/img_ARDUCAM.jpg')
-    enregistre_image_RGB(img)
+    img = Image.open('images/img_ARDUCAM'+format)
+    if img_bruit != None:
+        img = ImageChops.subtract(img, img_bruit)
+        img.save('images/img_ARDUCAM'+format)
+    enregistre_image_RGB(img, format)
     return img
 
 
-def enregistre_image_RGB(image):
+def capture_test_bruit(sp):
+    '''Génère des captures d'image de test selon un certain nombre de capture par intervale de temps'''
+    try:
+        path = str(pathlib.Path().absolute() / 'testBruit')
+        os.makedirs(path)
+    except FileExistsError:
+        pass
+    t = 10
+    dt = 0
+    for i in range(22):
+
+        sp.write(liste_actions.dic_actions['capture'])
+        time.sleep(1.4)  # 1.4
+        buff = b''
+        with open(f"testBruit/test_{i}_{dt}.jpg", "wb") as f:
+            while sp.in_waiting > 0:
+                buff += sp.read_all()
+                time.sleep(0.09)  # 0.09
+            f.write(buff)
+        if i == 6:
+            t = 30
+        elif i == 14:
+            t = 60
+        elif i == 19:
+            t = 1200
+        elif i == 20:
+            t = 1800
+        elif i == 21:
+            t = 0
+        time.sleep(t)
+        dt += t
+
+
+def enregistre_image_RGB(image, format):
     '''Enregistre l'image en grayscale des trois intensités R, G, B'''
     path = str(pathlib.Path().absolute() / 'images/')
     imR = image.getchannel(0)
-    imR.save(path + "\img_R.jpg")
+    imR.save(path + "\img_R"+format)
 
     imG = image.getchannel(1)
-    imG.save(path + "\img_G.jpg")
+    imG.save(path + "\img_G"+format)
 
     imB = image.getchannel(2)
-    imB.save(path + "\img_B.jpg")
+    imB.save(path + "\img_B"+format)
 
 
 def envoie_commande(sp, commande):
@@ -160,13 +196,13 @@ def moyenne_colonne(matR, matG, matB):
     list_moyenne = ([0]*width, [0]*width, [0]*width)
 
     for j in range(width):
-        sommeR = 0
-        sommeG = 0
-        sommeB = 0
-        for i in range(height):
-            sommeR += matR[i, j]
-            sommeG += matG[i, j]
-            sommeB += matB[i, j]
+        sommeR = sum(matR[:, j])
+        sommeG = sum(matG[:, j])
+        sommeB = sum(matB[:, j])
+        # for i in range(height):
+        #     sommeR += matR[i, j]
+        #     sommeG += matG[i, j]
+        #     sommeB += matB[i, j]
         list_moyenne[0][j] = round((sommeR/height), 1)
         list_moyenne[1][j] = round((sommeG/height), 1)
         list_moyenne[2][j] = round((sommeB/height), 1)
@@ -304,6 +340,22 @@ def plot_3D(liste_RGB, nbr_pixel, nbr_image):
     plt.show()
 
 
+def plot_3D_GUI(liste_RGB, nbr_pixel, nbr_image):
+    '''Fonction pour plot 3D avec l'interface graphique. Pour le graph openGL'''
+    x = np.arange(nbr_image)
+    y = np.arange(nbr_pixel)
+    zR = np.zeros((nbr_pixel, nbr_image))
+    zG = np.zeros((nbr_pixel, nbr_image))
+    zB = np.zeros((nbr_pixel, nbr_image))
+
+    ZR = z_functionR(x, y, zR, liste_RGB)
+
+    ZG = z_functionG(x, y, zG, liste_RGB)
+
+    ZB = z_functionB(x, y, zB, liste_RGB)
+    return x, y, ZR, ZG, ZB
+
+
 def plot_moyenne(liste_moyenne):
     '''Permet d'afficher les moyennes R, G, B de chaque colonne sur un meme graphique'''
     x = np.arange(len(liste_moyenne[0]))
@@ -322,7 +374,7 @@ def test_images(nbr_image, liste_pixels, sp, progressBar):
     nbr_pixel = len(liste_pixels)
     liste_RGB = cree_liste_RGB(nbr_image, nbr_pixel)
     for i in range(nbr_image):
-        image = capture(sp)
+        image = capture(sp, '.jpg')
         remplir_listes_RGB(i, liste_RGB, image, liste_pixels)
         progressBar.setValue(i*100/nbr_pixel)
     enregistrer_liste_RGB(

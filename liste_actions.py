@@ -17,3 +17,4 @@ dic_actions = {"320x240": b'0', "640x480": b'1', "1024x768": b'2', "1280x960": b
                "degree0": b'134', "degree30": b'135', "degree60": b'136', "degree90": b'137', "degree120": b'138', "degree150": b'139',
                "No Effect": b'144', "BW": b'145', "Bluish": b'146', "Sepia": b'147', "Reddish": b'148', "Greenish": b'149', "Negative": b'150',
                "Color_bar": b'224', "Color_square": b'225', "BW_square": b'226', "DLI": b'227'}
+dic_formats = {"JPEG": '.jpg', "BMP": '.bmp'}

@@ -27,7 +27,7 @@ const char bmp_header[BMPIMAGEOFFSET] PROGMEM =
   0x00, 0x00
 };
 // set pin 7 as the slave select for the digital pot:
-const int CS = 10;// 10 avec le shield, 7 pour le mini
+const int CS = 7;// 10 avec le shield, 7 pour le mini
 bool is_header = false;
 int mode = 0;
 uint8_t start_capture = 0;
@@ -180,6 +180,7 @@ if (Serial.available())
     myCAM.clear_bit(ARDUCHIP_TIM, VSYNC_LEVEL_MASK);
     myCAM.wrSensorReg16_8(0x3818, 0x81);
     myCAM.wrSensorReg16_8(0x3621, 0xA7);
+    Serial.println(F("ACK CMD set BMP format. END"));
     break;
     case 0x40:
     myCAM.OV5642_set_Light_Mode(Advanced_AWB);temp = 0xff;

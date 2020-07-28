@@ -43,116 +43,6 @@
     <property name="bottomMargin">
      <number>5</number>
     </property>
-    <item row="1" column="1">
-     <layout class="QFormLayout" name="formLayout">
-      <item row="0" column="0" colspan="2">
-       <widget class="QPushButton" name="bouton_capture">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Capture</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_nbrCapture">
-        <property name="text">
-         <string>Nombre d'itération</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QSpinBox" name="spinBox_nbrCapture">
-        <property name="minimum">
-         <number>1</number>
-        </property>
-        <property name="maximum">
-         <number>100</number>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0" colspan="2">
-       <widget class="QProgressBar" name="progressBar_nbrCapture">
-        <property name="value">
-         <number>0</number>
-        </property>
-        <property name="textVisible">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="1" column="0">
-     <layout class="QFormLayout" name="formLayout_2">
-      <property name="sizeConstraint">
-       <enum>QLayout::SetDefaultConstraint</enum>
-      </property>
-      <property name="topMargin">
-       <number>0</number>
-      </property>
-      <item row="0" column="0">
-       <widget class="QTextBrowser" name="textBrowser">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-          <horstretch>1</horstretch>
-          <verstretch>1</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>480</width>
-          <height>110</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>480</width>
-          <height>110</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QPushButton" name="bouton_vider">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>95</width>
-          <height>30</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>95</width>
-          <height>30</height>
-         </size>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::StrongFocus</enum>
-        </property>
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
-        </property>
-        <property name="text">
-         <string>Vider</string>
-        </property>
-        <property name="flat">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
     <item row="0" column="0" colspan="2">
      <widget class="QTabWidget" name="tabWidget">
       <property name="sizeIncrement">
@@ -192,6 +82,9 @@
         </property>
         <item>
          <widget class="QStackedWidget" name="stackedWidget_Images">
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
           <widget class="QWidget" name="page_im">
            <layout class="QGridLayout" name="gridLayout_5">
             <property name="leftMargin">
@@ -207,13 +100,6 @@
              <number>0</number>
             </property>
             <item row="0" column="1">
-             <widget class="QPushButton" name="bouton_im">
-              <property name="text">
-               <string>Intensite R -&gt;</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
              <spacer name="horizontalSpacer_6">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -226,7 +112,21 @@
               </property>
              </spacer>
             </item>
-            <item row="1" column="0" colspan="2">
+            <item row="0" column="2">
+             <widget class="QPushButton" name="bouton_im">
+              <property name="text">
+               <string>Intensite R -&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QPushButton" name="bouton_imBack">
+              <property name="text">
+               <string>&lt;- Image Bruit</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0" colspan="3">
              <widget class="QLabel" name="image_capteur">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -264,7 +164,14 @@
             <property name="bottomMargin">
              <number>0</number>
             </property>
-            <item row="0" column="0">
+            <item row="0" column="2">
+             <widget class="QPushButton" name="bouton_imR">
+              <property name="text">
+               <string>Intensite G -&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
              <spacer name="horizontalSpacer_7">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -277,14 +184,14 @@
               </property>
              </spacer>
             </item>
-            <item row="0" column="1">
-             <widget class="QPushButton" name="bouton_imR">
+            <item row="0" column="0">
+             <widget class="QPushButton" name="bouton_imRBack">
               <property name="text">
-               <string>Intensite G -&gt;</string>
+               <string>&lt;- Image</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="0" colspan="2">
+            <item row="1" column="0" colspan="3">
              <widget class="QLabel" name="image_capteurR">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -322,7 +229,14 @@
             <property name="bottomMargin">
              <number>0</number>
             </property>
-            <item row="0" column="0">
+            <item row="0" column="2">
+             <widget class="QPushButton" name="bouton_imG">
+              <property name="text">
+               <string>Intensite B -&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
              <spacer name="horizontalSpacer_8">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -335,14 +249,14 @@
               </property>
              </spacer>
             </item>
-            <item row="0" column="1">
-             <widget class="QPushButton" name="bouton_imG">
+            <item row="0" column="0">
+             <widget class="QPushButton" name="bouton_imGBack">
               <property name="text">
-               <string>Intensite B -&gt;</string>
+               <string>&lt;- Intensite R</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="0" colspan="2">
+            <item row="1" column="0" colspan="3">
              <widget class="QLabel" name="image_capteurG">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -380,7 +294,7 @@
             <property name="bottomMargin">
              <number>0</number>
             </property>
-            <item row="0" column="0">
+            <item row="0" column="1">
              <spacer name="horizontalSpacer_9">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -393,15 +307,87 @@
               </property>
              </spacer>
             </item>
-            <item row="0" column="1">
+            <item row="0" column="2">
              <widget class="QPushButton" name="bouton_imB">
+              <property name="text">
+               <string>Image Bruit -&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QPushButton" name="bouton_imBBack">
+              <property name="text">
+               <string>&lt;- Intensite G</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0" colspan="3">
+             <widget class="QLabel" name="image_capteurB">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="cursor">
+               <cursorShape>ArrowCursor</cursorShape>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="scaledContents">
+               <bool>true</bool>
+              </property>
+              <property name="indent">
+               <number>-1</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="page_imBruit">
+           <layout class="QGridLayout" name="gridLayout_12">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <property name="rightMargin">
+             <number>0</number>
+            </property>
+            <property name="bottomMargin">
+             <number>0</number>
+            </property>
+            <item row="0" column="0">
+             <widget class="QPushButton" name="bouton_imBruitBack">
+              <property name="text">
+               <string>&lt;- Intensite B</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <spacer name="horizontalSpacer_11">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>998</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="0" column="2">
+             <widget class="QPushButton" name="bouton_imBruit">
               <property name="text">
                <string>Image -&gt;</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="0" colspan="2">
-             <widget class="QLabel" name="image_capteurB">
+            <item row="1" column="0" colspan="3">
+             <widget class="QLabel" name="image_capteur_Bruit">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -460,7 +446,7 @@
         <item>
          <widget class="QStackedWidget" name="stackedWidget_graph">
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="page_moy_col">
            <layout class="QGridLayout" name="gridLayout_2">
@@ -476,7 +462,7 @@
             <property name="bottomMargin">
              <number>0</number>
             </property>
-            <item row="0" column="0">
+            <item row="0" column="1">
              <spacer name="horizontalSpacer_3">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -489,14 +475,21 @@
               </property>
              </spacer>
             </item>
-            <item row="0" column="1">
+            <item row="0" column="2">
              <widget class="QPushButton" name="bouton_graph_moy">
               <property name="text">
                <string>Graph. longueur d'onde-&gt;</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="0" colspan="2">
+            <item row="0" column="0">
+             <widget class="QPushButton" name="bouton_graph_moyBack">
+              <property name="text">
+               <string>&lt;- Graph. 3D</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0" colspan="3">
              <widget class="PlotWidget" name="graphicsView_moyenne">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -528,7 +521,7 @@
             <property name="bottomMargin">
              <number>0</number>
             </property>
-            <item row="0" column="0">
+            <item row="0" column="1">
              <spacer name="horizontalSpacer_5">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -541,14 +534,21 @@
               </property>
              </spacer>
             </item>
-            <item row="0" column="1">
+            <item row="0" column="2">
              <widget class="QPushButton" name="bouton_graph_LO">
               <property name="text">
                <string>Graph. test 3D -&gt;</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="0" colspan="2">
+            <item row="0" column="0">
+             <widget class="QPushButton" name="bouton_graph_LOBack">
+              <property name="text">
+               <string>&lt;- Graph. moy.</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0" colspan="3">
              <widget class="PlotWidget" name="graphicsView_LO">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -580,7 +580,14 @@
             <property name="bottomMargin">
              <number>0</number>
             </property>
-            <item row="0" column="0">
+            <item row="0" column="2">
+             <widget class="QPushButton" name="bouton_graph3D">
+              <property name="text">
+               <string>Graph. moy. -&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
              <spacer name="horizontalSpacer_4">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -593,14 +600,14 @@
               </property>
              </spacer>
             </item>
-            <item row="0" column="1">
-             <widget class="QPushButton" name="bouton_graph3D">
+            <item row="0" column="0">
+             <widget class="QPushButton" name="bouton_graph3DBack">
               <property name="text">
-               <string>Graph. moy. -&gt;</string>
+               <string>&lt;- Graph. longueur d'onde</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="0" colspan="2">
+            <item row="1" column="0" colspan="3">
              <widget class="QOpenGLWidget" name="openGLWidget"/>
             </item>
            </layout>
@@ -629,13 +636,10 @@
         <item>
          <widget class="QStackedWidget" name="stackedWidget">
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="page_Cap_test">
-           <layout class="QFormLayout" name="formLayout_3">
-            <property name="horizontalSpacing">
-             <number>7</number>
-            </property>
+           <layout class="QGridLayout" name="gridLayout_10">
             <property name="leftMargin">
              <number>0</number>
             </property>
@@ -648,52 +652,10 @@
             <property name="bottomMargin">
              <number>0</number>
             </property>
-            <item row="2" column="0" colspan="2">
-             <widget class="QTextBrowser" name="textBrowser_testCapture">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>1</verstretch>
-               </sizepolicy>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QPushButton" name="bouton_cap_test">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="focusPolicy">
-               <enum>Qt::NoFocus</enum>
-              </property>
-              <property name="layoutDirection">
-               <enum>Qt::LeftToRight</enum>
-              </property>
-              <property name="text">
-               <string>Moy. colonne -&gt;</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <spacer name="horizontalSpacer">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Expanding</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>1090</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="0" column="0" colspan="2">
+            <property name="horizontalSpacing">
+             <number>7</number>
+            </property>
+            <item row="0" column="1">
              <widget class="QLabel" name="label_cap_test">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -716,10 +678,62 @@
               </property>
              </widget>
             </item>
+            <item row="1" column="1">
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Expanding</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>1090</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="1" column="2">
+             <widget class="QPushButton" name="bouton_cap_test">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::NoFocus</enum>
+              </property>
+              <property name="layoutDirection">
+               <enum>Qt::LeftToRight</enum>
+              </property>
+              <property name="text">
+               <string>Moy. colonne -&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QPushButton" name="bouton_cap_testBack">
+              <property name="text">
+               <string>&lt;- Long. d'onde</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0" colspan="3">
+             <widget class="QTextBrowser" name="textBrowser_testCapture">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>1</verstretch>
+               </sizepolicy>
+              </property>
+             </widget>
+            </item>
            </layout>
           </widget>
           <widget class="QWidget" name="page_moy_col_don">
-           <layout class="QFormLayout" name="formLayout_4">
+           <layout class="QGridLayout" name="gridLayout_11">
             <property name="leftMargin">
              <number>0</number>
             </property>
@@ -733,23 +747,6 @@
              <number>0</number>
             </property>
             <item row="1" column="1">
-             <widget class="QPushButton" name="bouton_moy_col">
-              <property name="text">
-               <string>Long. d'onde -&gt;</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0" colspan="2">
-             <widget class="QTextBrowser" name="textBrowser_moy_colonne">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>1</verstretch>
-               </sizepolicy>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
              <spacer name="horizontalSpacer_2">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -762,7 +759,7 @@
               </property>
              </spacer>
             </item>
-            <item row="0" column="0" colspan="2">
+            <item row="0" column="1">
              <widget class="QLabel" name="label_moy_colonne">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -789,6 +786,30 @@
               </property>
              </widget>
             </item>
+            <item row="1" column="2">
+             <widget class="QPushButton" name="bouton_moy_col">
+              <property name="text">
+               <string>Long. d'onde -&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QPushButton" name="bouton_moy_colBack">
+              <property name="text">
+               <string>&lt;- Cap. test</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0" colspan="3">
+             <widget class="QTextBrowser" name="textBrowser_moy_colonne">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>1</verstretch>
+               </sizepolicy>
+              </property>
+             </widget>
+            </item>
            </layout>
           </widget>
           <widget class="QWidget" name="page_LO_don">
@@ -805,7 +826,14 @@
             <property name="bottomMargin">
              <number>0</number>
             </property>
-            <item row="0" column="0" colspan="2">
+            <item row="1" column="2">
+             <widget class="QPushButton" name="bouton_LO">
+              <property name="text">
+               <string>Cap. test -&gt;</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1" colspan="2">
              <widget class="QLabel" name="label_LO">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
@@ -832,7 +860,7 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="0">
+            <item row="1" column="1">
              <spacer name="horizontalSpacer_10">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -845,14 +873,14 @@
               </property>
              </spacer>
             </item>
-            <item row="1" column="1">
-             <widget class="QPushButton" name="bouton_LO">
+            <item row="1" column="0">
+             <widget class="QPushButton" name="bouton_LOBack">
               <property name="text">
-               <string>Cap. test -&gt;</string>
+               <string>&lt;- Moy. colonne</string>
               </property>
              </widget>
             </item>
-            <item row="2" column="0" colspan="2">
+            <item row="2" column="0" colspan="3">
              <widget class="QTextBrowser" name="textBrowser_LO">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -869,6 +897,146 @@
        </layout>
       </widget>
      </widget>
+    </item>
+    <item row="1" column="1">
+     <layout class="QFormLayout" name="formLayout">
+      <item row="0" column="0" colspan="2">
+       <widget class="QPushButton" name="bouton_capture">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Capture</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_nbrCapture">
+        <property name="text">
+         <string>Nombre d'itération</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QSpinBox" name="spinBox_nbrCapture">
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="2">
+       <widget class="QProgressBar" name="progressBar_nbrCapture">
+        <property name="value">
+         <number>0</number>
+        </property>
+        <property name="textVisible">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QPushButton" name="bouton_enr_img">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Enr. Image</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QCheckBox" name="checkBox_bruit">
+        <property name="text">
+         <string>Bruit</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="1" column="0">
+     <layout class="QFormLayout" name="formLayout_2">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetDefaultConstraint</enum>
+      </property>
+      <property name="horizontalSpacing">
+       <number>7</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="bouton_vider">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>95</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>95</width>
+          <height>30</height>
+         </size>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::StrongFocus</enum>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
+        <property name="text">
+         <string>Vider</string>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QTextBrowser" name="textBrowser">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+          <horstretch>1</horstretch>
+          <verstretch>1</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>480</width>
+          <height>110</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>10000000</width>
+          <height>10000000</height>
+         </size>
+        </property>
+        <property name="html">
+         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:7.8pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
@@ -891,12 +1059,14 @@
      </property>
      <addaction name="actionGroupe_de_pixels"/>
      <addaction name="actionEnr_moyenne_colonnes"/>
+     <addaction name="actionImage_sous"/>
     </widget>
     <widget class="QMenu" name="menuImporter">
      <property name="title">
       <string>Importer</string>
      </property>
      <addaction name="actionImage"/>
+     <addaction name="actionImage_bruit"/>
     </widget>
     <addaction name="menuImporter"/>
     <addaction name="separator"/>
@@ -948,7 +1118,7 @@
       <string>Capture</string>
      </property>
      <addaction name="actionCapture"/>
-     <addaction name="actionTest_images"/>
+     <addaction name="actionCapture_pixel"/>
     </widget>
     <widget class="QMenu" name="menuSaturation">
      <property name="title">
@@ -1107,10 +1277,17 @@
     <addaction name="separator"/>
     <addaction name="actionLongueur_d_onde"/>
    </widget>
+   <widget class="QMenu" name="menuTest">
+    <property name="title">
+     <string>Test</string>
+    </property>
+    <addaction name="actionTest_Bruit"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPort"/>
    <addaction name="menuCommandes"/>
    <addaction name="menuGraphique"/>
+   <addaction name="menuTest"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionQuitter">
@@ -1226,9 +1403,9 @@
     <string>Liste pixels</string>
    </property>
   </action>
-  <action name="actionTest_images">
+  <action name="actionCapture_pixel">
    <property name="text">
-    <string>Test images</string>
+    <string>Capture pixels</string>
    </property>
    <property name="toolTip">
     <string>Test</string>
@@ -1954,6 +2131,21 @@
   <action name="actionImage">
    <property name="text">
     <string>Image</string>
+   </property>
+  </action>
+  <action name="actionImage_sous">
+   <property name="text">
+    <string>Image sous</string>
+   </property>
+  </action>
+  <action name="actionImage_bruit">
+   <property name="text">
+    <string>Image bruit</string>
+   </property>
+  </action>
+  <action name="actionTest_Bruit">
+   <property name="text">
+    <string>Test Bruit</string>
    </property>
   </action>
  </widget>
