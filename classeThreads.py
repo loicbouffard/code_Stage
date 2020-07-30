@@ -8,7 +8,7 @@ import numpy
 
 
 class Worker(QtCore.QObject):
-    '''Classe '''
+    '''Classe Worker qui permet de lancé des threads'''
     read = QtCore.pyqtSignal(str)
 
     @QtCore.pyqtSlot(serial.Serial)
@@ -23,12 +23,28 @@ class Worker(QtCore.QObject):
 
     @QtCore.pyqtSlot(serial.Serial, str)
     def capture(self, sp, format):
-        img = actions_image.capture(sp, format)
+        if format == '.jpg':
+            img = actions_image.captureJPEG(sp)
+        elif format == '.bmp':
+            img = actions_image.captureBMP(sp)
+        elif format == '.raw':
+            img = actions_image.captureRAW(sp)
         self.image.emit(img)
+
+    @QtCore.pyqtSlot(serial.Serial)
+    def debutStreaming(self, sp):
+        actions_image.beginStreaming(sp)
+
+    endStream = QtCore.pyqtSignal(str)
+
+    @QtCore.pyqtSlot(serial.Serial)
+    def finStream(self, sp):
+        actions_image.endStreaming(sp)
+        self.endStream.emit("Fin du stream")
 
     @QtCore.pyqtSlot(serial.Serial, str, Image.Image)
     def capture_bruit(self, sp, format, img_bruit):
-        img = actions_image.capture(sp, format, img_bruit)
+        img = actions_image.captureJPEG(sp, img_bruit=img_bruit)
         self.image.emit(img)
 
     liste_moyenne = QtCore.pyqtSignal(tuple, list, list, list)
@@ -49,7 +65,7 @@ class Worker(QtCore.QObject):
         liste_RGB = actions_image.cree_liste_RGB(nbr_image, nbr_pixel)
 
         for i in range(nbr_image):
-            image = actions_image.capture(sp)
+            image = actions_image.captureJPEG(sp)
             actions_image.remplir_listes_RGB(
                 i, liste_RGB, image, liste_pixels)
             self.updateProgressBar.emit(i+1)
@@ -73,3 +89,21 @@ class Worker(QtCore.QObject):
     def test_bruit(self, sp):
         actions_image.capture_test_bruit(sp)
         self.test_bruitSignal.emit("Fin des captures d'image de bruit")
+
+
+class WorkerStream(QtCore.QObject):
+    '''Classe worker pour le streaming.'''
+    image = QtCore.pyqtSignal(Image.Image)
+
+    @QtCore.pyqtSlot(serial.Serial)
+    def stream(self, sp):
+        time.sleep(1)
+        while self.bStream:
+            self.image.emit(actions_image.stream(sp))
+            time.sleep(0.18)
+
+    bStream = False
+
+    @QtCore.pyqtSlot(bool)
+    def setBStream(self, b):
+        self.bStream = b

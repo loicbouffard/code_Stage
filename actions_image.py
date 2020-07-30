@@ -9,6 +9,7 @@ import liste_actions
 import pathlib
 import longueur_onde
 import os
+import datetime
 
 
 def list_port():
@@ -26,23 +27,84 @@ def init_port(nom):
     return sp
 
 
-def capture(sp, format='.jpg', img_bruit=None):
-    '''Envoie la commande de capture à au capteur'''
+def captureJPEG(sp, img_bruit=None):
+    '''Envoie la commande de capture en format Jpeg au capteur'''
     sp.write(liste_actions.dic_actions['capture'])
-    time.sleep(1.4)  # 1.4
+    time.sleep(0.41)  # 0.4 // 1.4
     buff = b''
-    with open("images/img_ARDUCAM"+format, "wb") as f:
+    #begin = datetime.datetime.now()
+    with open("images/img_ARDUCAM.jpg", "wb") as f:
+
+        while sp.in_waiting > 0:
+            buff += sp.read_all()
+            time.sleep(0.09)  # 0.09
+        f.write(buff)
+    # end = datetime.datetime.now()
+    # print(end-begin)
+    sp.reset_input_buffer()
+    img = Image.open('images/img_ARDUCAM.jpg')
+    if img_bruit != None:
+        img = ImageChops.subtract(img, img_bruit)
+        img.save('images/img_ARDUCAM.jpg')
+    enregistre_image_RGB(img, '.jpg')
+    return img
+
+
+def beginStreaming(sp):
+    sp.write(liste_actions.dic_actions['stream'])
+
+
+def stream(sp):
+    buff = b''
+    with open("images/img_ARDUCAM.jpg", "wb") as f:
 
         while sp.in_waiting > 0:
             buff += sp.read_all()
             time.sleep(0.09)  # 0.09
         f.write(buff)
     sp.reset_input_buffer()
-    img = Image.open('images/img_ARDUCAM'+format)
-    if img_bruit != None:
-        img = ImageChops.subtract(img, img_bruit)
-        img.save('images/img_ARDUCAM'+format)
-    enregistre_image_RGB(img, format)
+    try:
+        img = Image.open('images/img_ARDUCAM.jpg')
+    except:
+        pass
+    return img
+
+
+def endStreaming(sp):
+    sp.write(liste_actions.dic_actions['streamStop'])
+
+
+def captureBMP(sp):
+    '''Envoie la commande de capture en format BMP au capteur'''
+    sp.write(liste_actions.dic_actions['captureBMP'])
+    time.sleep(0.4)  # 0.4
+    buff = b''
+    with open("images/img_ARDUCAM.bmp", "wb") as f:
+
+        while sp.in_waiting > 0:
+            buff += sp.read_all()
+            time.sleep(0.09)  # 0.09
+        f.write(buff)
+    sp.reset_input_buffer()
+    img = Image.open('images/img_ARDUCAM.bmp')
+    enregistre_image_RGB(img, '.bmp')
+    return img
+
+
+def captureRAW(sp):
+    '''Envoie la commande de capture en format RAW au capteur'''
+    sp.write(liste_actions.dic_actions['captureRAW'])
+    time.sleep(1.4)  # 1.4
+    buff = b''
+    with open("images/img_ARDUCAM.cr2", "wb") as f:
+
+        while sp.in_waiting > 0:
+            buff += sp.read_all()
+            time.sleep(0.09)  # 0.09
+        f.write(buff)
+    sp.reset_input_buffer()
+    img = Image.open('images/img_ARDUCAM.cr2')
+    enregistre_image_RGB(img, '.cr2')
     return img
 
 
@@ -58,7 +120,7 @@ def capture_test_bruit(sp):
     for i in range(22):
 
         sp.write(liste_actions.dic_actions['capture'])
-        time.sleep(1.4)  # 1.4
+        time.sleep(0.41)  # 1.4
         buff = b''
         with open(f"testBruit/test_{i}_{dt}.jpg", "wb") as f:
             while sp.in_waiting > 0:
@@ -95,9 +157,7 @@ def enregistre_image_RGB(image, format):
 def envoie_commande(sp, commande):
     '''Envoie la commande à l'arduino'''
     sp.write(liste_actions.dic_actions[commande])
-    # if commande in liste_actions.dic_dim:
-    #     sp.timeout = liste_actions.dic_dim[commande]
-    time.sleep(2)
+    time.sleep(0.1)
     return sp.readline().decode('utf-8')
 
 
@@ -374,7 +434,7 @@ def test_images(nbr_image, liste_pixels, sp, progressBar):
     nbr_pixel = len(liste_pixels)
     liste_RGB = cree_liste_RGB(nbr_image, nbr_pixel)
     for i in range(nbr_image):
-        image = capture(sp, '.jpg')
+        image = captureJPEG(sp, '.jpg')
         remplir_listes_RGB(i, liste_RGB, image, liste_pixels)
         progressBar.setValue(i*100/nbr_pixel)
     enregistrer_liste_RGB(

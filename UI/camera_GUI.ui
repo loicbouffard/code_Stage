@@ -1119,6 +1119,8 @@ p, li { white-space: pre-wrap; }
      </property>
      <addaction name="actionCapture"/>
      <addaction name="actionCapture_pixel"/>
+     <addaction name="actionD_but_stream"/>
+     <addaction name="actionFin_stream"/>
     </widget>
     <widget class="QMenu" name="menuSaturation">
      <property name="title">
@@ -2146,6 +2148,16 @@ p, li { white-space: pre-wrap; }
   <action name="actionTest_Bruit">
    <property name="text">
     <string>Test Bruit</string>
+   </property>
+  </action>
+  <action name="actionD_but_stream">
+   <property name="text">
+    <string>Début stream</string>
+   </property>
+  </action>
+  <action name="actionFin_stream">
+   <property name="text">
+    <string>Fin stream</string>
    </property>
   </action>
  </widget>

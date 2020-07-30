@@ -24,6 +24,9 @@ class camera_GUI(QtWidgets.QMainWindow):
     longDonde = QtCore.pyqtSignal(tuple)
     test_bruit_signal = QtCore.pyqtSignal(serial.Serial)
     test_Cap_pixel = QtCore.pyqtSignal(serial.Serial, int, int, list)
+    debutstream = QtCore.pyqtSignal(serial.Serial)
+    finstream = QtCore.pyqtSignal(serial.Serial)
+    boolStream = QtCore.pyqtSignal(bool)
 
     def __init__(self):
         super(camera_GUI, self).__init__()
@@ -107,6 +110,8 @@ class camera_GUI(QtWidgets.QMainWindow):
         self.actionImage_bruit.triggered.connect(self.action_import_bruit)
         self.actionTest_Bruit.triggered.connect(self.test_bruit)
         self.actionGraphique_pixels.triggered.connect(self.affiche_plot3D)
+        self.actionD_but_stream.triggered.connect(self.debutStream)
+        self.actionFin_stream.triggered.connect(self.finStream)
 
     def action_quitter(self):
         self.action_fermer()
@@ -136,7 +141,6 @@ class camera_GUI(QtWidgets.QMainWindow):
     def recoitCapture(self, img):
         self.image = img
         self.update_image(self.format_image)
-        self.sp.reset_input_buffer()
         self.textBrowser.append("Capture faite")
 
     def afficher_port_dispo(self):
@@ -267,7 +271,6 @@ class camera_GUI(QtWidgets.QMainWindow):
             except serial.serialutil.SerialException:
                 self.textBrowser.append("Choisir un port")
             except Exception as err:
-                print(type(err))
                 self.textBrowser.append(str(err))
         else:
             self.textBrowser.append(
@@ -482,9 +485,28 @@ class camera_GUI(QtWidgets.QMainWindow):
         actions_image.enregistrer_LO(liste)
         self.update_tab_donne_LO()
 
+    def debutStream(self):
+        self.boolStream.emit(True)
+        self.debutstream.emit(self.sp)
+
+    def finStream(self):
+        self.boolStream.emit(False)
+        self.finstream.emit(self.sp)
+
+    @QtCore.pyqtSlot(str)
+    def recoitStream(self, text):
+        self.textBrowser.append(text)
+
+    @QtCore.pyqtSlot(Image.Image)
+    def recoitImageStream(self, img):
+        self.image = img
+        self.update_image(self.format_image)
+
     def init_worker(self):
         self.worker = classeThreads.Worker()
         self.worker_thread = QtCore.QThread()
+        self.workerStream = classeThreads.WorkerStream()
+        self.workerStream_thread = QtCore.QThread()
 
         self.port_ouvert.connect(self.worker.read_port)
         self.worker.read.connect(self.recoitPort)
@@ -507,8 +529,17 @@ class camera_GUI(QtWidgets.QMainWindow):
         self.worker.zvaleur.connect(self.recoitCapPixel)
         self.worker.updateProgressBar.connect(self.updateProgressBar)
 
+        self.debutstream.connect(self.worker.debutStreaming)
+        self.debutstream.connect(self.workerStream.stream)
+        self.finstream.connect(self.worker.finStream)
+        self.boolStream.connect(self.workerStream.setBStream)
+        self.worker.endStream.connect(self.recoitStream)
+        self.workerStream.image.connect(self.recoitImageStream)
+
         self.worker.moveToThread(self.worker_thread)
         self.worker_thread.start()
+        self.workerStream.moveToThread(self.workerStream_thread)
+        self.workerStream_thread.start()
 
     def enregistrer_imageSous(self):
         name = QtWidgets.QFileDialog.getSaveFileName(
