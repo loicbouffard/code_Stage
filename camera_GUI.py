@@ -13,6 +13,7 @@ import pyqtgraph.opengl as gl
 import serial
 import classeThreads
 import liste_actions
+import Dialog_Aide
 
 
 class camera_GUI(QtWidgets.QMainWindow):
@@ -38,6 +39,7 @@ class camera_GUI(QtWidgets.QMainWindow):
         self.format_image = '.jpg'
         self.liste_moyenne = []
         self.liste_pos_pixels = []
+        self.creerDossiers()
         self.afficher_port_dispo()
         self.init_graph()
         self.group_Actions()
@@ -74,15 +76,7 @@ class camera_GUI(QtWidgets.QMainWindow):
         self.actionImage.triggered.connect(self.action_import_image)
         self.bouton_graph_moy.clicked.connect(
             lambda: self.stackedWidget_graph.setCurrentIndex(1))
-        self.bouton_graph_moyBack.clicked.connect(
-            lambda: self.stackedWidget_graph.setCurrentIndex(2))
-        self.bouton_graph3D.clicked.connect(
-            lambda: self.stackedWidget_graph.setCurrentIndex(0))
-        self.bouton_graph3DBack.clicked.connect(
-            lambda: self.stackedWidget_graph.setCurrentIndex(1))
         self.bouton_graph_LO.clicked.connect(
-            lambda: self.stackedWidget_graph.setCurrentIndex(2))
-        self.bouton_graph_LOBack.clicked.connect(
             lambda: self.stackedWidget_graph.setCurrentIndex(0))
         self.bouton_im.clicked.connect(
             lambda: self.stackedWidget_Images.setCurrentIndex(1))
@@ -109,9 +103,9 @@ class camera_GUI(QtWidgets.QMainWindow):
             lambda: self.stackedWidget_Images.setCurrentIndex(3))
         self.actionImage_bruit.triggered.connect(self.action_import_bruit)
         self.actionTest_Bruit.triggered.connect(self.test_bruit)
-        self.actionGraphique_pixels.triggered.connect(self.affiche_plot3D)
         self.actionD_but_stream.triggered.connect(self.debutStream)
         self.actionFin_stream.triggered.connect(self.finStream)
+        self.actionManuel_d_utilisation.triggered.connect(self.ouvrirAide)
 
     def action_quitter(self):
         self.action_fermer()
@@ -250,6 +244,12 @@ class camera_GUI(QtWidgets.QMainWindow):
             test.triggered.connect(self.action_commandes)
             group_tests.addAction(test)
         group_tests.setExclusive(True)
+
+        group_CQ = QtWidgets.QActionGroup(self.menuCompress_quality)
+        for cq in self.menuCompress_quality.actions():
+            cq.triggered.connect(self.action_commandes)
+            group_CQ.addAction(cq)
+        group_CQ.setExclusive(True)
 
     def action_commandes(self):
         try:
@@ -435,7 +435,7 @@ class camera_GUI(QtWidgets.QMainWindow):
 
     def action_import_image(self):
         filePath = QtWidgets.QFileDialog.getOpenFileName(
-            filter="Image Files (*.png *.jpg)")[0]
+            filter="Image Files (*.png *.jpg *.bmp)")[0]
         if filePath:
             self.image = Image.open(filePath)
             format = filePath[-4:]
@@ -452,7 +452,7 @@ class camera_GUI(QtWidgets.QMainWindow):
 
     def action_import_bruit(self):
         filePath = QtWidgets.QFileDialog.getOpenFileName(
-            filter="Image Files (*.png *.jpg)")[0]
+            filter="Image Files (*.png *.jpg *.bmp)")[0]
         if filePath:
             self.image_bruit = Image.open(filePath)
             self.image_capteur_Bruit.setPixmap(
@@ -466,9 +466,6 @@ class camera_GUI(QtWidgets.QMainWindow):
         axes = gl.GLAxisItem()
         axes.setSize(10, 10, 10)
         self.gl_Graph.addItem(axes)
-
-    def affiche_plot3D(self):
-        self.gl_Graph.show()
 
     def action_LO(self):
         if self.image != 0:
@@ -543,7 +540,7 @@ class camera_GUI(QtWidgets.QMainWindow):
 
     def enregistrer_imageSous(self):
         name = QtWidgets.QFileDialog.getSaveFileName(
-            self, 'Enregistrer capture', filter="Image Files (*.jpg)")[0]
+            self, 'Enregistrer capture', filter=f"Image Files (*{self.format})")[0]
         self.image.save(name)
 
     def test_bruit(self):
@@ -555,6 +552,14 @@ class camera_GUI(QtWidgets.QMainWindow):
     @ QtCore.pyqtSlot(str)
     def recoitTest_bruit(self, text):
         self.textBrowser.append(text)
+
+    def ouvrirAide(self):
+        dlg = Dialog_Aide.DialogAide(self)
+        if dlg.exec_():
+            pass
+
+    def creerDossiers(self):
+        actions_image.creerDossiers()
 
 
 if __name__ == "__main__":

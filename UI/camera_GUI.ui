@@ -27,7 +27,7 @@
     <normaloff>../images/ulaval_shield.png</normaloff>../images/ulaval_shield.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout" rowstretch="1,0" columnstretch="1,0">
+   <layout class="QGridLayout" name="gridLayout" rowstretch="1,0,0" columnstretch="1,0,0">
     <property name="sizeConstraint">
      <enum>QLayout::SetDefaultConstraint</enum>
     </property>
@@ -43,7 +43,7 @@
     <property name="bottomMargin">
      <number>5</number>
     </property>
-    <item row="0" column="0" colspan="2">
+    <item row="0" column="0" colspan="3">
      <widget class="QTabWidget" name="tabWidget">
       <property name="sizeIncrement">
        <size>
@@ -460,7 +460,7 @@
              <number>0</number>
             </property>
             <property name="bottomMargin">
-             <number>0</number>
+             <number>18</number>
             </property>
             <item row="0" column="1">
              <spacer name="horizontalSpacer_3">
@@ -479,13 +479,6 @@
              <widget class="QPushButton" name="bouton_graph_moy">
               <property name="text">
                <string>Graph. longueur d'onde-&gt;</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QPushButton" name="bouton_graph_moyBack">
-              <property name="text">
-               <string>&lt;- Graph. 3D</string>
               </property>
              </widget>
             </item>
@@ -519,7 +512,7 @@
              <number>0</number>
             </property>
             <property name="bottomMargin">
-             <number>0</number>
+             <number>18</number>
             </property>
             <item row="0" column="1">
              <spacer name="horizontalSpacer_5">
@@ -537,14 +530,7 @@
             <item row="0" column="2">
              <widget class="QPushButton" name="bouton_graph_LO">
               <property name="text">
-               <string>Graph. test 3D -&gt;</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QPushButton" name="bouton_graph_LOBack">
-              <property name="text">
-               <string>&lt;- Graph. moy.</string>
+               <string>Graph. moy. -&gt;</string>
               </property>
              </widget>
             </item>
@@ -563,52 +549,6 @@
                </size>
               </property>
              </widget>
-            </item>
-           </layout>
-          </widget>
-          <widget class="QWidget" name="page_test_iter">
-           <layout class="QGridLayout" name="gridLayout_3">
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property>
-            <item row="0" column="2">
-             <widget class="QPushButton" name="bouton_graph3D">
-              <property name="text">
-               <string>Graph. moy. -&gt;</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <spacer name="horizontalSpacer_4">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>1094</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="0" column="0">
-             <widget class="QPushButton" name="bouton_graph3DBack">
-              <property name="text">
-               <string>&lt;- Graph. longueur d'onde</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0" colspan="3">
-             <widget class="QOpenGLWidget" name="openGLWidget"/>
             </item>
            </layout>
           </widget>
@@ -898,7 +838,7 @@
       </widget>
      </widget>
     </item>
-    <item row="1" column="1">
+    <item row="2" column="2">
      <layout class="QFormLayout" name="formLayout">
       <item row="0" column="0" colspan="2">
        <widget class="QPushButton" name="bouton_capture">
@@ -962,12 +902,15 @@
       </item>
      </layout>
     </item>
-    <item row="1" column="0">
+    <item row="2" column="0">
      <layout class="QFormLayout" name="formLayout_2">
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
       <property name="horizontalSpacing">
+       <number>7</number>
+      </property>
+      <property name="verticalSpacing">
        <number>7</number>
       </property>
       <property name="topMargin">
@@ -1057,7 +1000,6 @@ p, li { white-space: pre-wrap; }
      <property name="title">
       <string>Enregistrer</string>
      </property>
-     <addaction name="actionGroupe_de_pixels"/>
      <addaction name="actionEnr_moyenne_colonnes"/>
      <addaction name="actionImage_sous"/>
     </widget>
@@ -1251,6 +1193,15 @@ p, li { white-space: pre-wrap; }
      <addaction name="actionManual_A"/>
      <addaction name="actionManual_cwf"/>
      <addaction name="actionManual_cloudy"/>
+     <addaction name="actionAWB_off"/>
+    </widget>
+    <widget class="QMenu" name="menuCompress_quality">
+     <property name="title">
+      <string>Compress quality</string>
+     </property>
+     <addaction name="actionHigh"/>
+     <addaction name="actionDefault"/>
+     <addaction name="actionLow"/>
     </widget>
     <addaction name="menuDimensions"/>
     <addaction name="menuCapture"/>
@@ -1264,6 +1215,7 @@ p, li { white-space: pre-wrap; }
     <addaction name="menuMirror"/>
     <addaction name="menuHue"/>
     <addaction name="menuLight_mode"/>
+    <addaction name="menuCompress_quality"/>
     <addaction name="menuSpecial_Effect"/>
     <addaction name="separator"/>
     <addaction name="menuTests"/>
@@ -1275,7 +1227,6 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionMoyenne_colonne"/>
     <addaction name="separator"/>
     <addaction name="actionListe_pixels"/>
-    <addaction name="actionGraphique_pixels"/>
     <addaction name="separator"/>
     <addaction name="actionLongueur_d_onde"/>
    </widget>
@@ -1285,11 +1236,18 @@ p, li { white-space: pre-wrap; }
     </property>
     <addaction name="actionTest_Bruit"/>
    </widget>
+   <widget class="QMenu" name="menuAide">
+    <property name="title">
+     <string>Aide</string>
+    </property>
+    <addaction name="actionManuel_d_utilisation"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuPort"/>
    <addaction name="menuCommandes"/>
    <addaction name="menuGraphique"/>
    <addaction name="menuTest"/>
+   <addaction name="menuAide"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionQuitter">
@@ -2160,6 +2118,43 @@ p, li { white-space: pre-wrap; }
     <string>Fin stream</string>
    </property>
   </action>
+  <action name="actionHigh">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>High</string>
+   </property>
+  </action>
+  <action name="actionDefault">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Default</string>
+   </property>
+  </action>
+  <action name="actionLow">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Low</string>
+   </property>
+  </action>
+  <action name="actionManuel_d_utilisation">
+   <property name="text">
+    <string>Manuel d'utilisation</string>
+   </property>
+  </action>
+  <action name="actionAWB_off">
+   <property name="text">
+    <string>AWB_off</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -2168,6 +2163,37 @@ p, li { white-space: pre-wrap; }
    <header>pyqtgraph</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>bouton_imG</tabstop>
+  <tabstop>bouton_imR</tabstop>
+  <tabstop>bouton_imRBack</tabstop>
+  <tabstop>bouton_imBack</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>bouton_im</tabstop>
+  <tabstop>bouton_imGBack</tabstop>
+  <tabstop>bouton_imB</tabstop>
+  <tabstop>bouton_imBBack</tabstop>
+  <tabstop>bouton_imBruitBack</tabstop>
+  <tabstop>bouton_imBruit</tabstop>
+  <tabstop>bouton_cap_testBack</tabstop>
+  <tabstop>textBrowser_testCapture</tabstop>
+  <tabstop>bouton_moy_col</tabstop>
+  <tabstop>bouton_moy_colBack</tabstop>
+  <tabstop>textBrowser_moy_colonne</tabstop>
+  <tabstop>bouton_LO</tabstop>
+  <tabstop>bouton_LOBack</tabstop>
+  <tabstop>textBrowser_LO</tabstop>
+  <tabstop>bouton_capture</tabstop>
+  <tabstop>spinBox_nbrCapture</tabstop>
+  <tabstop>bouton_enr_img</tabstop>
+  <tabstop>checkBox_bruit</tabstop>
+  <tabstop>bouton_vider</tabstop>
+  <tabstop>textBrowser</tabstop>
+  <tabstop>bouton_graph_moy</tabstop>
+  <tabstop>graphicsView_moyenne</tabstop>
+  <tabstop>bouton_graph_LO</tabstop>
+  <tabstop>graphicsView_LO</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -12,6 +12,27 @@ import os
 import datetime
 
 
+def creerDossiers():
+    '''Permet de créer les dossiers utilisés pas l'applicatio dans le répertoire du projet.'''
+    try:
+        path = str(pathlib.Path().absolute() / 'testBruit')
+        os.makedirs(path)
+    except FileExistsError:
+        pass
+
+    try:
+        path = str(pathlib.Path().absolute() / 'images')
+        os.makedirs(path)
+    except FileExistsError:
+        pass
+
+    try:
+        path = str(pathlib.Path().absolute() / 'sauvegarde')
+        os.makedirs(path)
+    except FileExistsError:
+        pass
+
+
 def list_port():
     '''Retourne une liste des noms des ports séries disponible.'''
     list_port = []
@@ -94,27 +115,23 @@ def captureBMP(sp):
 def captureRAW(sp):
     '''Envoie la commande de capture en format RAW au capteur'''
     sp.write(liste_actions.dic_actions['captureRAW'])
-    time.sleep(1.4)  # 1.4
+    time.sleep(0.5)  # 0.5
     buff = b''
-    with open("images/img_ARDUCAM.cr2", "wb") as f:
+    with open("images/img_ARDUCAM.raw", "wb") as f:
 
         while sp.in_waiting > 0:
             buff += sp.read_all()
             time.sleep(0.09)  # 0.09
         f.write(buff)
     sp.reset_input_buffer()
-    img = Image.open('images/img_ARDUCAM.cr2')
-    enregistre_image_RGB(img, '.cr2')
+    img = Image.open('images/img_ARDUCAM.raw')
+    enregistre_image_RGB(img, '.raw')
     return img
 
 
 def capture_test_bruit(sp):
     '''Génère des captures d'image de test selon un certain nombre de capture par intervale de temps'''
-    try:
-        path = str(pathlib.Path().absolute() / 'testBruit')
-        os.makedirs(path)
-    except FileExistsError:
-        pass
+
     t = 10
     dt = 0
     for i in range(22):
@@ -143,6 +160,7 @@ def capture_test_bruit(sp):
 
 def enregistre_image_RGB(image, format):
     '''Enregistre l'image en grayscale des trois intensités R, G, B'''
+
     path = str(pathlib.Path().absolute() / 'images/')
     imR = image.getchannel(0)
     imR.save(path + "\img_R"+format)
@@ -157,7 +175,7 @@ def enregistre_image_RGB(image, format):
 def envoie_commande(sp, commande):
     '''Envoie la commande à l'arduino'''
     sp.write(liste_actions.dic_actions[commande])
-    time.sleep(0.1)
+    time.sleep(0.35)
     return sp.readline().decode('utf-8')
 
 
@@ -217,7 +235,7 @@ def affiche_matrice(matrice):
 
 
 def cree_liste_RGB(nbr_image, nbr_pixel):
-    '''Crée une liste de tuples qui contient des listes
+    '''Cree une liste de tuples qui contient des listes
     le nombre de tuples correspond au nombre de pixels analysés, les tuples sont des
     triplets qui correspond au trois couleurs RGB du pixel, les listes contenues dans
     les triplets correspondes au nombre d'images capturées (soit la valeur de l'intensité du pixel (R/G/B) de la n capture) '''

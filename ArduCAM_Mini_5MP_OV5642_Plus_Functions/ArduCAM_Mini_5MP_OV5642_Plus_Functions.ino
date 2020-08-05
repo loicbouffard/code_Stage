@@ -26,7 +26,7 @@ const char bmp_header[BMPIMAGEOFFSET] PROGMEM =
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF8, 0x00, 0x00, 0xE0, 0x07, 0x00, 0x00, 0x1F, 0x00,
         0x00, 0x00};
 // set pin 7 as the slave select for the digital pot:
-const int CS = 10; // 10 avec le shield, 7 pour le mini
+const int CS = 10;// originalement 7 pour le mini, mais mis à 10 pour pouvoir fonctionner avec le Shield V2.1 aussi.
 bool is_header = false;
 int mode = 0;
 uint8_t start_capture = 0;
@@ -101,6 +101,8 @@ void setup()
   myCAM.clear_fifo_flag();
   myCAM.write_reg(ARDUCHIP_FRAMES, 0x00);
 }
+uint16_t reg = 0x0001;
+byte bytearr[2];
 void loop()
 {
   // put your main code here, to run repeatedly:
@@ -166,6 +168,7 @@ void loop()
       myCAM.set_format(JPEG);
       myCAM.InitCAM();
       Serial.println(F("ACK CMD set JPEG format. END"));
+      break;
 #if !(defined(OV2640_MINI_2MP))
       myCAM.set_bit(ARDUCHIP_TIM, VSYNC_LEVEL_MASK);
 #endif
@@ -230,6 +233,11 @@ void loop()
       myCAM.OV5642_set_Light_Mode(Manual_cloudy);
       temp = 0xff;
       Serial.println(F("ACK CMD Set to Manual_cloudy END"));
+      break;
+    case 0x46:
+      myCAM.wrSensorReg16_8(0x5001,0x7E);//0x7E
+      temp = 0xff;
+      Serial.println(F("ACK CMD Set to AWB off END"));
       break;
     case 0x50:
       myCAM.OV5642_set_Color_Saturation(Saturation4);

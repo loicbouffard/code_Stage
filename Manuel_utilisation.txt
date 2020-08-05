@@ -1,0 +1,107 @@
+À noter qu'à l'ouverture de l'application, si les dossiers «testBruit», «images» et «sauvegarde» n'existent pas, ils seront automatiquement créés puisque ce sont des dossiers utilisés par l'application.
+Fonctionnalités
+Menus:
+	-Fichier:
+		1. Importer:
+			i. Image: Permet d'importer une image enregistrer dans l'ordinateur. (Formats autorisés : JPEG, BMP).
+			ii. Image bruit: Permet d'importer une image qui sera utilisée pour éliminer le bruit d'une image capturée si l'option «Bruit» est coché/activé.
+		2. Enregistrer: 
+			i. Moyennes colonnes: Enregistre les valeurs du graphiques des moyennes RGB de chaque colonne dans un fichier «.txt» dans le dossier «sauvegarde» sous le nom «moyenne_colonne.txt».
+			ii. Image sous: Permet d'enregistrer l'image capturée.
+		3. Quitter: Ferme l'application.
+	-Port:
+		1. Disponible: Affiche la liste des ports disponibles (normalement, COM5 pour l'Arduino Nano et COM3 pour l'Arduino Uno). Si un port est connecté après l'ouverture de l'application, il suffit de cliquer sur «Actualiser» pour rafraîchir la liste de port disponible.
+		2. Ouvrir: Ouvre le port série si un nom de port a été préalablement sélectionné dans la liste des port disponible.
+		3. Fermer: Ferme le port série s'il est ouvert.
+	-Commandes: Les commandes sont envoyées à l'Arduino qui lui-même envoie des commandes au capteur afin de modifier ses registres et ainsi modifier le comportement du capteur. À noter que pour réinitialiser le capteur dans les cas où la modification de ce dernier ne revient pas à la normal, il suffit de fermer le port et de le réouvrir. Ainsi le capteur reprend ses configuration de base.
+		1. Dimensions: Permet de choisir les dimenssions des images capturées (320x240, 640x480, 1024x768, 1280x960, 1600x1200, 2048x1536, 2592x1944)
+		2. Capture: 
+			i. Capture: Prend une image du capteur.
+			ii. Capture pixels: Permet de prendre plusieurs captures d'image à répétition et d'y enregistrer les valeurs RGB de chaque pixels de la liste. Un graphique 3D s'affiche par la suite. Le nombre de capture est défini par le nombre affiché dans le compteur. À noter qu'il faut avoir rempli la liste de pixel (voir Graphique -> Liste pixels).
+			iii. Début stream: Permet de prendre plusieurs captures à répétition et les affiches dans la fenêtre Image. Aucun traitement d'image n'est réalisé.
+			iv. Fin stream: Arrête le stream. Envoie une commande à l'arduino afin qu'il arrête d'envoyer des images.
+		3. Format: 
+			i. JPEG: Change le format des images du capteur en JPEG.
+			ii. RAW: Change le format des images du capteur en RAW. L'application ne peut pas lire les images de format RAW puisque la librairie utilisée (Image de PILLOW) de Pythoin ne le permet pas. L'image est quand même enregistée dans le dossier «Images» et peut être ouverte avec un autre logiciel.
+			iii. BMP: Change le format des images du capteur en BMP.
+		4. Saturation: Permet de modifier la saturation du capteur(+4 à -4).
+		5. Brightness: Permet de modifier la luminosité du capteur (+4 à -4).
+		6. Contrast: Permet de modifier le contraste des couleur du capteur(+4 à -4). 
+		7. Sharpness: Permet de modifier le «sharpness» du capteur (Automatique ou Manuel).
+		8. Exposure: Permet de modifier le temps d'intégration du capteur(-1.7EV,-1.3EV,-1EV,-0.7EV,-0.3EV, Default(0), 0.7EV,1EV,1.3EV,1.7EV).
+		9. Mirror: Permet de changer les réflexions d'image.
+		10. Hue: Permet de modifier l'angle des couleurs en degrés (-180, -150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150).
+		11. Light mode: Permet de modifier le «white balance».
+		12. Compress quality: Permet de modifier la qualité de compression en format JPEG.
+		13. Special effect: Permet d'ajouter différents effets à l'image.
+		14. Tests:  Différents tests possible pour le capteur.
+	-Graphique: 
+		1. Moyennes colonnes: Génère le graphique des moyennes RGB de chaque colonne.
+		2. Listes pixels: Ouvre une fenêtre permettant d'écrire la liste de pixels à analyser pendant le mode «Capture pixels». La liste peut simplement s'écrire sous la forme suivante: x1,y1,x2,y2... Faire attention à ne pas donnée des coordonnées à l'extérieur de l'image(Ex: 321,12 si l'image capturée est de dimension 320x240). Lorsque le bouton «OK» est cliqué, la liste sera affiché dans l'Afficheur. Si une liste à déjà été entrée, elle sera afficher dans l'éditeur de texte de la fenêtre de modification et il suffit de rajouter de nouvelles coordonnées à la suite sous la même forme qu'une nouvelle liste.
+		3. Longueur d'onde: Génère le graphique des longueurs si le graphique des moyennes des colonnes a été préalablement généré. Cette fonction est automatique exécuter lorsque le graphique des moyennes des colonnes est généré.
+	-Test: 
+		1. Test bruit: Lance le programme de test de bruit qui permet de capturer des images à un certain intervalle de temps. 7 captures pendant la première minute(10 sec), 8 captures pendant les 4 prochaines minutes(30 sec), 5 captures pendant les 5 prochaines minutes (60 sec), 1 capture après  30 minutes puis une dernière à 60 minutes. Les images sont enregistrées dans le dossier «testBruit».
+	-Aide:
+		1. Manuel d'utilisation: Ouvre cette fenêtre...
+Fenêtres:
+	-Images: (Énumérées en changeant de panneau vers la droite)
+		1. Image capturée (image d'origine).
+		2. Image «grayscale» de l'intensité rouge de l'image d'origine. 
+		3. Image «grayscale» de l'intensité verte de l'image d'origine.
+		4. Image «grayscale» de l'intensité bleue de l'image d'origine.
+		5. Image de bruit (importée).
+	-Graphiques:
+		1. Graphique des moyennes RGB de chaque colonne de l'image capturée.
+		2. Graphique des longueurs d'onde de l'image capturée.
+	-Données:
+		1. Affiche les valeurs du graphique des moyennes des colonnes sous forme de listes séparées (identifiée), soit une pour l'intensité rouge(R), vert(G), bleu(B) et une dernière qui affiche leur transformation en grayscale(L).
+		2. Affiche les valeurs du graphique des longueur d'onde sous forme de couples de données des longueurs et de leur intensité.
+		3.  Affiche les valeurs du graphique du mode «Capture pixel» sous forme de listes. Trois listes sont affichées pour chaque pixel identifiées comme suit: pRi, pGi, pBi où «i» corresppond à l'index du pixel dans la liste. La longueur des listes correspond au nombre d'itération(de captures faites). La liste des coordonnées des pixels choisis est aussi affichée au début. Ex: pR0: [123, 127, ...] correspond à l'intensité rouge du pixel à l'indice 0 dans la liste, pour la première capture (123) et pour la deuxième capture (127).
+Autres:
+	-Afficheur: Affiches les messages reçus depuis l'Arduino, les messages d'erreur ou autre.
+	-Boutons:
+		1. Vider: Vide le texte présent dans l'afficheur.
+		2. Capture: Prend une capture d'image du capteur.
+		3. Enr. Image: Permet d'enregistrer l'image capturée.
+	- Compteur: Permet de choisr le nombre de capture à prendre pour le mode «Capture pixel».
+	- Bar de progression: Affiche la progression du nombre d'image capturée en mode «Capture pixel».
+	- CheckBox Bruit: Si elle est cochée et s'il y a une image de bruit importée, l'image de bruit sera soustraite à la prochaine image capturée. 
+	
+
+Utilisation de l'application sans capteur
+Pour utiliser l'application sans caméra, il suffit d'importer une image depuis le menu Fichier -> Importer -> Image. Ensuite, la génération des graphiques graphiques des moyennes des colonnes et des longueurs peuvent se faire.
+
+Utilisation de l'application avec capteur
+Étapes pour établir la connection avec la caméra:
+	1. Connecter l'Arduino à l'ordinateur.
+	2. Sélectionner le port série affiché dans la liste des ports disponibles (Port -> Disponible). Si l'Arduino est connecté avant l'ouverture de l'application, le port devrait s'afficher directement dans la liste. S'il est connecté après l'ouverture de l'application, il faut cliquer sur «Actualiser» afin de regénérer la liste des ports disponibles.
+	3. Une fois le port série sélectionné, cliquer sur «Ouvrir» depuis le menu «Port».
+	4. Si le module de caméra est bien connecté, les messages suivant, provenant de l'Arduino, devrait apparaître à l'afficheur: «ACK CMD ArduCAM Start! END ACK CMD SPI interface OK. END ACK CMD OV5642 detected. END».
+	5. Pour fermer le port série, il suffit de cliquer sur «Fermer» depuis le menu «Port». Il peut donc être réouvert en recliquant sur «Ouvrir», mais le capteur sera réinitialisé.
+
+Fonctionnalités:(Une fois la connexion établie avec le capteur)
+	1. Les captures d'image peuvent donc être prises à l'aide du bouton «Capture» ou depuis le menu «Commandes -> Capture-> Capture».
+	2. Les commandes peuvent être envoyé au capteur à l'aide du menu «Commandes» puis en cliquant sur celle voulu. (Voir Fonctionnalités, Menus, Commandes)
+	3. Une image peut aussi être importée même si le capteur est connecté.
+	4. Une image de bruit peut être importée depuis le menu «Fichier -> Importer -> Image bruit».
+	5. Lorsqu'une image de bruits est importée, le «CheckBox Bruit» peut donc être coché. Si c'est le cas, la prochaine image capturée sera affecté par l'image de bruit. En déselectionnant l'option «Bruit», la prochaine image capturée ne sera pas affecté par l'image de bruits.
+	6. Lorsqu'une image est capturée, elle apparaîtra dans le panneau «Image» où il y a les deux boutons «<- Image Bruit» et «Intensité R ->». Chaque bouton permet de changer de fenêtre dans le panneau «Image». Il y a donc 5 fenêtres: 1) Image 2) Intensité Rouge 3) Intensité Verte 4 ) Intensité Bleue 5) Image de bruit. Les images des intensités RGB représente l'image d'origine en affichant en «grayscale» seulement l'une des intensité RGB à la fois.
+	7. Si une image est affichée dans le panneau «Image», la génération des graphiques peut être faite. Il faut toujours commencé par générer le graphique des moyennes des colonnes, autrement, il vous le sera demandé puisque le graphique des longueurs d'onde dépend de ce dernier. Le graphique des longueur d'onde est automatiquement généré lorsque celui des moyennes des colonnes est fait. Les données de chacun des graphiques sont affichées dans le panneau «Données». Les graphiques sont affichéssous le panneau «Graphiques». Les données des graphiques sont aussi automatiquement enregistrées dans des fichiers «.txt» dans le dossier «sauvegarde».
+	8. Le mode «Capture pixels» peut être activé à tout moment. Il faut cependant avoir rempli la liste de pixels à analyser depuis le menu «Graphique -> Liste pixels». Une fenêtre apparaîtra et il suffit d'écrire la liste des coordonnées des pixels sous le forme suivante: x1,y1,x2,y2... Lorsque terminé, cliquer sur «Ok» pour modifier la liste ou «Cancel» pour annuler. Si «OK» est sélectionné, la liste de pixel s'affichera à l'afficheur et s'il n'y a pas d'erreur. Si une modification de la liste est voulue, il suffit de recliquer sur «Graphique -> Liste pixels», la liste précédemment écrite apparaîtra de nouveau. Il suffit de rajouter les nouvelles coordonnées à la fin de la même façon.
+	9. Le nombre de capture à prendre pour le mode «Capture pixels» est définit à l'aide du compteur situé sous le bouton capture.
+	10. Lorsque le mode «Capture pixels» est lancé, la bar de pregression sera mise à jour en fonction du nombre de capture prise sur le total à réaliser. Lorsque le processus est terminé, le graphique 3D sera affiché depuis une nouvelle fenêtre.
+	11. Le menu «Test -> Test Bruit» permet de générer des captures d'image à un certain intervalle de temps (voir Fontionnalité -> Menus -> Test). Les images seront enregistrées dans le dossier «testBruit».
+
+Connexion Arduino/Capteur
+Arduino Nano avec ArduCAM mini :(ArduCAM -> Nano)
+	1. CS -> D10
+	2. MOSI -> D11
+	3. MISO -> D12
+	4. SCLK -> D13
+	5. GND -> GND
+	6. VCC -> 5V
+	7. SDATA -> A4
+	8. SCL -> A5
+Arduino Uno avec Shield V2.1 + OV5642 CS mount:
+	1. Connecter le module du capteur directement sur le Header 20 du Shield V2.1. Le numéro des pins 1,2,19,20 sont inscrits sur les deux PCB.
+	2. Connecter l'Arduino Uno directement sur le Shield V2.1. 

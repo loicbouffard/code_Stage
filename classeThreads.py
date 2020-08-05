@@ -97,10 +97,11 @@ class WorkerStream(QtCore.QObject):
 
     @QtCore.pyqtSlot(serial.Serial)
     def stream(self, sp):
-        time.sleep(1)
+        time.sleep(0.4)
         while self.bStream:
             self.image.emit(actions_image.stream(sp))
-            time.sleep(0.18)
+            # 0.2 pour image couleur, 0.15 pour image noire // dim 320x240
+            time.sleep(0.2)
 
     bStream = False
 
