@@ -1,3 +1,5 @@
+'''Ce module contient les fonctions pour calculer les différentes variables
+lors de la transformation des couleurs RGB vers les longueurs d'ondes.'''
 import math
 
 

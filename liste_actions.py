@@ -1,3 +1,5 @@
+'''Ce module contient les dictionnaires des commandes pouvant être envoyées au capteur et le format des images pouvant être capturées.
+À chaque commande est associé la valeur hexadécimale qui doit être envoyée à l'Arduino afin qu'il effectue les modifications ou les actions.'''
 dic_actions = {"320x240": b'\x00', "640x480": b'\x01', "1024x768": b'\x02', "1280x960": b'\x03',
                "1600x1200": b'\x04', "2048x1536": b'\x05', "2592x1944": b'\x06', "capture": b'\x10',
                "JPEG": b'\x11', "RAW": b'\x12', "captureRAW": b'\x13', "stream": b'\x20', "streamStop": b'\x21', "captureBMP": b'\x30', "BMP": b'\x31',

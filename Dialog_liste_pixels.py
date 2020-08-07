@@ -1,3 +1,4 @@
+'''Ce module contient la classe du dialogue pour l'enregistrement de la liste de pixels.'''
 from PyQt5 import QtWidgets
 from PyQt5 import uic
 

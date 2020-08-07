@@ -1,3 +1,4 @@
+'''Ce module contient la classe de l'interface graphique. Exécuter ce code pour lancer l'application.'''
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5 import uic
@@ -385,7 +386,6 @@ class camera_GUI(QtWidgets.QMainWindow):
         zB = tup[4]
         print(len(x))
         print(len(y))
-        # [(12, 10), (20, 34), (56, 76), (43, 32), (56, 78)]
         try:
             self.plotGL_3DR = gl.GLSurfacePlotItem(
                 x=y, y=x, z=zR, colors=[(0.4, 0.5, 1, 1)])

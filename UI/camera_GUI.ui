@@ -2151,6 +2151,9 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionAWB_off">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>AWB_off</string>
    </property>

@@ -1,3 +1,4 @@
+'''Ce module contient des fonctions utilisées par l'application pour diverses actions.'''
 import numpy as np
 from PIL import Image, ImageChops
 import matplotlib.pyplot as plt

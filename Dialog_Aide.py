@@ -1,3 +1,4 @@
+'''Ce module contient la classe du dialogue de l'interface d'aide'''
 from PyQt5 import QtWidgets
 from PyQt5 import uic
 

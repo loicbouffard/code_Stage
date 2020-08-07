@@ -1,3 +1,4 @@
+'''Ce module contient les classes «Worker» qui permette l'utilisation des threads de l'application.'''
 from PyQt5 import QtCore
 import actions_image
 import serial
@@ -8,7 +9,7 @@ import numpy
 
 
 class Worker(QtCore.QObject):
-    '''Classe Worker qui permet de lancé des threads'''
+    '''Classe Worker qui permet de lancé des threads pour l'application'''
     read = QtCore.pyqtSignal(str)
 
     @QtCore.pyqtSlot(serial.Serial)
