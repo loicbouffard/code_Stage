@@ -53,10 +53,12 @@ Fenêtres:
 	-Graphiques:
 		1. Graphique des moyennes RGB de chaque colonne de l'image capturée.
 		2. Graphique des longueurs d'onde de l'image capturée.
+		3. Histogramme du nombre de colonne selon la longueur d'onde détectée.
 	-Données:
 		1. Affiche les valeurs du graphique des moyennes des colonnes sous forme de listes séparées (identifiée), soit une pour l'intensité rouge(R), vert(G), bleu(B) et une dernière qui affiche leur transformation en grayscale(L).
 		2. Affiche les valeurs du graphique des longueur d'onde sous forme de couples de données des longueurs et de leur intensité.
-		3.  Affiche les valeurs du graphique du mode «Capture pixel» sous forme de listes. Trois listes sont affichées pour chaque pixel identifiées comme suit: pRi, pGi, pBi où «i» corresppond à l'index du pixel dans la liste. La longueur des listes correspond au nombre d'itération(de captures faites). La liste des coordonnées des pixels choisis est aussi affichée au début. Ex: pR0: [123, 127, ...] correspond à l'intensité rouge du pixel à l'indice 0 dans la liste, pour la première capture (123) et pour la deuxième capture (127).
+		3. Affiche les valeurs du graphique du mode «Capture pixel» sous forme de listes. Trois listes sont affichées pour chaque pixel identifiées comme suit: pRi, pGi, pBi où «i» corresppond à l'index du pixel dans la liste. La longueur des listes correspond au nombre d'itération(de captures faites). La liste des coordonnées des pixels choisis est aussi affichée au début. Ex: pR0: [123, 127, ...] correspond à l'intensité rouge du pixel à l'indice 0 dans la liste, pour la première capture (123) et pour la deuxième capture (127).
+		4. Affiche les valeurs de l'histogramme sous forme de dictionnaire correspondant au nombre de colonne pour chaque longueur d'onde.
 Autres:
 	-Afficheur: Affiches les messages reçus depuis l'Arduino, les messages d'erreur ou autre.
 	-Boutons:
@@ -64,6 +66,7 @@ Autres:
 		2. Capture: Prend une capture d'image du capteur.
 		3. Enr. Image: Permet d'enregistrer l'image capturée.
 	- Compteur: Permet de choisr le nombre de capture à prendre pour le mode «Capture pixel».
+	- Compteurs longueur d'onde: Permet d'ajuster les longueurs d'onde pour la génération du graphique des longueurs d'ondes
 	- Bar de progression: Affiche la progression du nombre d'image capturée en mode «Capture pixel».
 	- CheckBox Bruit: Si elle est cochée et s'il y a une image de bruit importée, l'image de bruit sera soustraite à la prochaine image capturée. 
 	
@@ -86,7 +89,7 @@ Fonctionnalités:(Une fois la connexion établie avec le capteur)
 	4. Une image de bruit peut être importée depuis le menu «Fichier -> Importer -> Image bruit».
 	5. Lorsqu'une image de bruits est importée, le «CheckBox Bruit» peut donc être coché. Si c'est le cas, la prochaine image capturée sera affecté par l'image de bruit. En déselectionnant l'option «Bruit», la prochaine image capturée ne sera pas affecté par l'image de bruits.
 	6. Lorsqu'une image est capturée, elle apparaîtra dans le panneau «Image» où il y a les deux boutons «<- Image Bruit» et «Intensité R ->». Chaque bouton permet de changer de fenêtre dans le panneau «Image». Il y a donc 5 fenêtres: 1) Image 2) Intensité Rouge 3) Intensité Verte 4 ) Intensité Bleue 5) Image de bruit. Les images des intensités RGB représente l'image d'origine en affichant en «grayscale» seulement l'une des intensité RGB à la fois.
-	7. Si une image est affichée dans le panneau «Image», la génération des graphiques peut être faite. Il faut toujours commencé par générer le graphique des moyennes des colonnes, autrement, il vous le sera demandé puisque le graphique des longueurs d'onde dépend de ce dernier. Le graphique des longueur d'onde est automatiquement généré lorsque celui des moyennes des colonnes est fait. Les données de chacun des graphiques sont affichées dans le panneau «Données». Les graphiques sont affichéssous le panneau «Graphiques». Les données des graphiques sont aussi automatiquement enregistrées dans des fichiers «.txt» dans le dossier «sauvegarde».
+	7. Si une image est affichée dans le panneau «Image», la génération des graphiques peut être faite. Il faut toujours commencé par générer le graphique des moyennes des colonnes, autrement, il vous le sera demandé puisque le graphique des longueurs d'onde et l'histogramme dépendent de ce dernier. Le graphique des longueur d'onde et l'histogrmme sont automatiquement générés lorsque celui des moyennes des colonnes est fait. Les données de chacun des graphiques sont affichées dans le panneau «Données». Les graphiques sont affichéssous le panneau «Graphiques». Les données des graphiques sont aussi automatiquement enregistrées dans des fichiers «.txt» dans le dossier «sauvegarde».
 	8. Le mode «Capture pixels» peut être activé à tout moment. Il faut cependant avoir rempli la liste de pixels à analyser depuis le menu «Graphique -> Liste pixels». Une fenêtre apparaîtra et il suffit d'écrire la liste des coordonnées des pixels sous le forme suivante: x1,y1,x2,y2... Lorsque terminé, cliquer sur «Ok» pour modifier la liste ou «Cancel» pour annuler. Si «OK» est sélectionné, la liste de pixel s'affichera à l'afficheur et s'il n'y a pas d'erreur. Si une modification de la liste est voulue, il suffit de recliquer sur «Graphique -> Liste pixels», la liste précédemment écrite apparaîtra de nouveau. Il suffit de rajouter les nouvelles coordonnées à la fin de la même façon.
 	9. Le nombre de capture à prendre pour le mode «Capture pixels» est définit à l'aide du compteur situé sous le bouton capture.
 	10. Lorsque le mode «Capture pixels» est lancé, la bar de pregression sera mise à jour en fonction du nombre de capture prise sur le total à réaliser. Lorsque le processus est terminé, le graphique 3D sera affiché depuis une nouvelle fenêtre.

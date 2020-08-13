@@ -15,12 +15,16 @@ def convertion_0_1(liste_moyenne):
     return liste_0_1
 
 
-def liste_MMCLHSSL(liste_0_1):
+def liste_MMCLHSSL(liste_0_1, lMax, lMin):
     '''Permet d'obtenir une liste de tuple contenant les valeurs max, min, Chroma, Luminance, Hue, Saturation max,
     Saturation mid et longueur d'onde d'une liste de moyenne converti /1.
     [(max,min,C,L,H,Smax,Smid,Lambda), ...]'''
     length = len(liste_0_1[0])
     liste_mmclhssl = [0]*length
+    dic = {}
+    lambMax = lMax
+    lambMin = lMin
+    deltaLamb = lambMax-lambMin
     for i in range(length):
         R = liste_0_1[0][i]
         G = liste_0_1[1][i]
@@ -31,9 +35,10 @@ def liste_MMCLHSSL(liste_0_1):
         l = (xmax+xmin)/2
         h = calcul_Hue(c, xmax, R, G, B)
         smax, smid = calcul_saturation(xmax, c, l)
-        lamb = 600 - ((200*h)/270)
+        lamb = round(lambMax - ((deltaLamb*h)/270), 2)
+        ajouter_valeur_dicLO(dic, lamb)
         liste_mmclhssl[i] = (xmax, xmin, c, l, h, smax, smid, lamb)
-    return liste_mmclhssl
+    return liste_mmclhssl, dic
 
 
 def calcul_saturation(xmax, c, l):
@@ -56,9 +61,11 @@ def calcul_Hue(c, xmax, R, G, B):
     elif xmax == R:
         h = 60 * ((G-B)/c)
     elif xmax == G:
-        h = 60 * (2 + (B-R)/c)
+        h = 60 * ((B-R)/c) + 120
+        # h = 60 * (2 + ((B-R)/c))
     elif xmax == B:
-        h = 60 * (4 + (R-G)/c)
+        h = 60 * ((R-G)/c) + 240
+        # h = 60 * (4 + ((R-G)/c))
     return h
 
 
@@ -85,3 +92,13 @@ def liste_tuple_param(liste_mmclhssl, liste_norme, nbr_param=2):
             liste[i] = (liste_mmclhssl[i][4], liste_mmclhssl[i]
                         [6], liste_norme[i], liste_mmclhssl[i][7])
     return liste
+
+
+def ajouter_valeur_dicLO(dic, lamb):
+    '''Ajoute une valeur de longueur d'onde au dictionnaire. Les clés du ditonnaire sont les longueurs d'onde et les valeurs sont 
+    le nombre de fois que celle-ci se retrouve parmis la liste des moyennes de colonnes. Si elle est déjà présente, le nombre s'incrémente de 1,
+    si elle ne l'est pas, elle est ajoutée au dictionnaire avec une valeur de 1.'''
+    if lamb in dic:
+        dic[lamb] = dic[lamb] + 1
+    else:
+        dic[lamb] = 1

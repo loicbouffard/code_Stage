@@ -76,13 +76,17 @@ class Worker(QtCore.QObject):
             liste_RGB, nbr_pixel, nbr_image))
 
     liste_LO = QtCore.pyqtSignal(list, list, list)
+    list_histo = QtCore.pyqtSignal(list, list, dict)
 
-    @QtCore.pyqtSlot(tuple)
-    def longeur_donde(self, liste_moyenne):
-        liste = actions_image.longueur_Donde(liste_moyenne)
-        x = [l[1] for l in liste]
-        y = [i[0] for i in liste]
+    @QtCore.pyqtSlot(tuple, int, int)
+    def longeur_donde(self, liste_moyenne, lMax, lMin):
+        liste, histo = actions_image.longueur_Donde(
+            liste_moyenne, lMax, lMin, nbr_param=4)
+        x = [l[3] for l in liste]
+        y = [i[2] for i in liste]
         self.liste_LO.emit(liste, x, y)
+        self.list_histo.emit([l for l in histo], [
+                             nbr for nbr in histo.values()], histo)
 
     test_bruitSignal = QtCore.pyqtSignal(str)
 

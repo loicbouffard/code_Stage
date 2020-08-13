@@ -23,7 +23,7 @@ class camera_GUI(QtWidgets.QMainWindow):
     port_capture = QtCore.pyqtSignal(serial.Serial, str)
     port_capture_bruit = QtCore.pyqtSignal(serial.Serial, str, Image.Image)
     matRGB = QtCore.pyqtSignal(np.ndarray, np.ndarray, np.ndarray)
-    longDonde = QtCore.pyqtSignal(tuple)
+    longDonde = QtCore.pyqtSignal(tuple, int, int)
     test_bruit_signal = QtCore.pyqtSignal(serial.Serial)
     test_Cap_pixel = QtCore.pyqtSignal(serial.Serial, int, int, list)
     debutstream = QtCore.pyqtSignal(serial.Serial)
@@ -45,7 +45,6 @@ class camera_GUI(QtWidgets.QMainWindow):
         self.init_graph()
         self.group_Actions()
         self.init_worker()
-        self.init_GLwidget()
 
         self.bouton_vider.clicked.connect(self.action_bouton_vider)
         self.bouton_capture.clicked.connect(self.action_bouton_capture)
@@ -63,22 +62,41 @@ class camera_GUI(QtWidgets.QMainWindow):
             self.action_cap_pixel)
 
         self.bouton_moy_col.clicked.connect(
-            lambda: self.stackedWidget.setCurrentIndex(2))
+            lambda: self.stackedWidget.setCurrentIndex(3))
         self.bouton_moy_colBack.clicked.connect(
-            lambda: self.stackedWidget.setCurrentIndex(0))
+            lambda: self.stackedWidget.setCurrentIndex(1))
+
         self.bouton_cap_test.clicked.connect(
             lambda: self.stackedWidget.setCurrentIndex(1))
         self.bouton_cap_testBack.clicked.connect(
-            lambda: self.stackedWidget.setCurrentIndex(2))
+            lambda: self.stackedWidget.setCurrentIndex(3))
+
         self.bouton_LO.clicked.connect(
             lambda: self.stackedWidget.setCurrentIndex(0))
         self.bouton_LOBack.clicked.connect(
-            lambda: self.stackedWidget.setCurrentIndex(1))
+            lambda: self.stackedWidget.setCurrentIndex(2))
+
+        self.bouton_histo_don.clicked.connect(
+            lambda: self.stackedWidget.setCurrentIndex(2))
+        self.bouton_histo_donBack.clicked.connect(
+            lambda: self.stackedWidget.setCurrentIndex(0))
+
         self.actionImage.triggered.connect(self.action_import_image)
         self.bouton_graph_moy.clicked.connect(
             lambda: self.stackedWidget_graph.setCurrentIndex(1))
+        self.bouton_graph_moyBack.clicked.connect(
+            lambda: self.stackedWidget_graph.setCurrentIndex(2))
+
         self.bouton_graph_LO.clicked.connect(
+            lambda: self.stackedWidget_graph.setCurrentIndex(2))
+        self.bouton_graph_LOBack.clicked.connect(
             lambda: self.stackedWidget_graph.setCurrentIndex(0))
+
+        self.bouton_graph_Histo.clicked.connect(
+            lambda: self.stackedWidget_graph.setCurrentIndex(0))
+        self.bouton_graph_HistoBack.clicked.connect(
+            lambda: self.stackedWidget_graph.setCurrentIndex(1))
+
         self.bouton_im.clicked.connect(
             lambda: self.stackedWidget_Images.setCurrentIndex(1))
         self.bouton_imBack.clicked.connect(
@@ -330,13 +348,24 @@ class camera_GUI(QtWidgets.QMainWindow):
             [0], [0], name="Pixels bleus", pen=penB)
 
         # Graphique longueurs d'onde
+        pen = pyqtgraph.mkPen(color='y')
+
         self.graphicsView_LO.setTitle(
             "Intensité lumineuse en fonction de la longueur d'onde")
         self.graphicsView_LO.setLabel("left", "Intensité")
         self.graphicsView_LO.setLabel("bottom", "Longueur d'onde (nm)")
         self.graphicsView_LO.showGrid(x=True, y=True)
 
-        self.plot_LO = self.graphicsView_LO.plot([0], [0])
+        self.plot_LO = self.graphicsView_LO.plot([0], [0], pen=pen)
+
+        # Histogramme longueurs d'onde
+        self.graphicsView_Histo.setTitle(
+            "Histogramme des longueurs d'onde")
+        self.graphicsView_Histo.setLabel("left", "Nombre de colonne")
+        self.graphicsView_Histo.setLabel("bottom", "Longueur d'onde (nm)")
+        self.graphicsView_Histo.showGrid(x=True, y=True)
+
+        self.plot_histo = self.graphicsView_Histo.plot([0], [0], pen=pen)
 
     def enregistrer_moyenne_colonnes(self):
         if self.image != 0:
@@ -384,21 +413,21 @@ class camera_GUI(QtWidgets.QMainWindow):
         zR = tup[2]
         zG = tup[3]
         zB = tup[4]
-        print(len(x))
-        print(len(y))
         try:
-            self.plotGL_3DR = gl.GLSurfacePlotItem(
-                x=y, y=x, z=zR, colors=[(0.4, 0.5, 1, 1)])
-            self.plotGL_3DG = gl.GLSurfacePlotItem(
-                x=y, y=x, z=zG, colors=(55, 30, 90, 100))
-            self.plotGL_3DB = gl.GLSurfacePlotItem(
-                x=y, y=x, z=zB, colors=(55, 100, 100, 1))
-            self.gl_Graph.addItem(self.plotGL_3DR)
-            self.gl_Graph.addItem(self.plotGL_3DG)
-            self.gl_Graph.addItem(self.plotGL_3DB)
-            self.gl_Graph.show()
+            self.plotGL_3DR = gl.GLSurfacePlotItem(x=y, y=x, z=zR)
+            self.plotGL_3DG = gl.GLSurfacePlotItem(x=y, y=x, z=zG)
+            self.plotGL_3DB = gl.GLSurfacePlotItem(x=y, y=x, z=zB)
+
+            self.gl_GraphR.addItem(self.plotGL_3DR)
+            self.gl_GraphG.addItem(self.plotGL_3DG)
+            self.gl_GraphB.addItem(self.plotGL_3DB)
+
+            self.gl_GraphR.show()
+            self.gl_GraphG.show()
+            self.gl_GraphB.show()
+
             self.update_tab_donnee_test_cap()
-            self.update_image('.jpg')
+            self.update_image(self.format_image)
             self.progressBar_nbrCapture.setValue(0)
         except Exception as err:
             self.textBrowser.append(str(err))
@@ -422,6 +451,11 @@ class camera_GUI(QtWidgets.QMainWindow):
         with open('sauvegarde/longueur_onde.txt', 'r') as fich:
             text = fich.read()
         self.textBrowser_LO.setText(text)
+
+    def update_tab_donne_Histo(self):
+        with open('sauvegarde/histogramme.txt', 'r') as fich:
+            text = fich.read()
+        self.textBrowser_histo.setText(text)
 
     def update_image(self, format):
         self.image_capteur.setPixmap(
@@ -459,18 +493,57 @@ class camera_GUI(QtWidgets.QMainWindow):
                 QtGui.QPixmap(filePath))
 
     def init_GLwidget(self):
-        self.gl_Graph = gl.GLViewWidget()
-        self.gl_Graph.setGeometry(0, 50, 1000, 800)
-        self.gl_Graph.setWindowTitle("Graphique 3D")
+        # xgrid = gl.GLGridItem()
+        # ygrid = gl.GLGridItem()
+        # zgrid = gl.GLGridItem()
 
-        axes = gl.GLAxisItem()
-        axes.setSize(10, 10, 10)
-        self.gl_Graph.addItem(axes)
+        self.gl_GraphR = gl.GLViewWidget()
+        self.gl_GraphR.setGeometry(0, 50, 1000, 800)
+        self.gl_GraphR.setWindowTitle("Graphique pixels R")
+
+        # self.gl_GraphR.addItem(xgrid)
+        # self.gl_GraphR.addItem(ygrid)
+        # self.gl_GraphR.addItem(zgrid)
+
+        self.gl_GraphG = gl.GLViewWidget()
+        self.gl_GraphG.setGeometry(0, 50, 1000, 800)
+        self.gl_GraphG.setWindowTitle("Graphique pixels G")
+        # self.gl_GraphG.addItem(xgrid)
+        # self.gl_GraphG.addItem(ygrid)
+        # self.gl_GraphG.addItem(zgrid)
+
+        self.gl_GraphB = gl.GLViewWidget()
+        self.gl_GraphB.setGeometry(0, 50, 1000, 800)
+        self.gl_GraphB.setWindowTitle("Graphique pixels B")
+        # self.gl_GraphB.addItem(xgrid)
+        # self.gl_GraphB.addItem(ygrid)
+        # self.gl_GraphB.addItem(zgrid)
+
+        # xgrid.rotate(90, 0, 1, 0)
+        # ygrid.rotate(90, 1, 0, 0)
+
+        axesR = gl.GLAxisItem()
+        axesR.setSize(100, 100, 255)
+        self.gl_GraphR.addItem(axesR)
+
+        axesG = gl.GLAxisItem()
+        axesG.setSize(100, 100, 255)
+        self.gl_GraphG.addItem(axesG)
+
+        axesB = gl.GLAxisItem()
+        axesB.setSize(100, 100, 255)
+        self.gl_GraphB.addItem(axesB)
 
     def action_LO(self):
         if self.image != 0:
             if len(self.liste_moyenne) != 0:
-                self.longDonde.emit(self.liste_moyenne)
+                lMax = self.spinBox_LO_max.value()
+                lMin = self.spinBox_LO_min.value()
+                if lMax > lMin:
+                    self.longDonde.emit(self.liste_moyenne, lMax, lMin)
+                else:
+                    self.textBrowser.append(
+                        "La longueur d'onde minimale est supérieure ou égale à la longueur d'onde maximale.")
             else:
                 self.plot_moyenne_graph()
         else:
@@ -481,6 +554,12 @@ class camera_GUI(QtWidgets.QMainWindow):
         self.plot_LO.setData(x, y)
         actions_image.enregistrer_LO(liste)
         self.update_tab_donne_LO()
+
+    @ QtCore.pyqtSlot(list, list, dict)
+    def recoitHisto(self, x, y, dic):
+        self.plot_histo.setData(x, y)
+        actions_image.enregistrer_Histo(dic)
+        self.update_tab_donne_Histo()
 
     def debutStream(self):
         self.boolStream.emit(True)
@@ -518,6 +597,7 @@ class camera_GUI(QtWidgets.QMainWindow):
 
         self.longDonde.connect(self.worker.longeur_donde)
         self.worker.liste_LO.connect(self.recoitLongDonde)
+        self.worker.list_histo.connect(self.recoitHisto)
 
         self.test_bruit_signal.connect(self.worker.test_bruit)
         self.worker.test_bruitSignal.connect(self.recoitTest_bruit)

@@ -52,7 +52,7 @@ def init_port(nom):
 def captureJPEG(sp, img_bruit=None):
     '''Envoie la commande de capture en format Jpeg au capteur'''
     sp.write(liste_actions.dic_actions['capture'])
-    time.sleep(0.41)  # 0.4 // 1.4
+    time.sleep(0.41)  # 0.4
     buff = b''
     #begin = datetime.datetime.now()
     with open("images/img_ARDUCAM.jpg", "wb") as f:
@@ -308,6 +308,12 @@ def enregistrer_LO(liste_LO):
         f.write(str(liste_LO))
 
 
+def enregistrer_Histo(dic):
+    '''Enregistre le dictionnaire de l'histogramme des longueurs d'onde'''
+    with open('sauvegarde/histogramme.txt', 'w') as f:
+        f.write(str(dic))
+
+
 def ligne_horizontale(matR, matG, matB, num_ligne):
     '''Permet d'obtenir les valeurs RGB d'une ligne horizontale'''
     width = len(matR[0])
@@ -472,10 +478,11 @@ def L_list(liste_moyenne):
     return L
 
 
-def longueur_Donde(liste_moyenne, nbr_param=2):
+def longueur_Donde(liste_moyenne, lMax, lMin, nbr_param=2):
     '''Permet d'obtenir une liste de tuples contenant [(H,Smid,norme,lambda)...] ou [(norme,lambda)...]'''
     liste_0_1 = longueur_onde.convertion_0_1(liste_moyenne)
-    liste_mmclhssl = longueur_onde.liste_MMCLHSSL(liste_0_1)
+    liste_mmclhssl, dic_histo = longueur_onde.liste_MMCLHSSL(
+        liste_0_1, lMax, lMin)
     liste_norme = longueur_onde.liste_norme_RGB(liste_0_1)
 
-    return longueur_onde.liste_tuple_param(liste_mmclhssl, liste_norme, nbr_param)
+    return longueur_onde.liste_tuple_param(liste_mmclhssl, liste_norme, nbr_param), dic_histo
