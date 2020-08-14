@@ -620,7 +620,7 @@ class camera_GUI(QtWidgets.QMainWindow):
 
     def enregistrer_imageSous(self):
         name = QtWidgets.QFileDialog.getSaveFileName(
-            self, 'Enregistrer capture', filter=f"Image Files (*{self.format})")[0]
+            self, 'Enregistrer capture', filter=f"Image Files (*{self.format_image})")[0]
         self.image.save(name)
 
     def test_bruit(self):
